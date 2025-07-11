@@ -12,9 +12,9 @@ import BlogList from "./pages/Blog/BlogList";
 import BlogAdd from "./pages/Blog/BlogAdd";
 import BlogDetail from "./pages/Blog/BlogDetail";
 import BlogEdit from "./pages/Blog/BlogEdit";
-import Products from './pages/Products';
-import ProductForm from './pages/ProductForm';
-import ProductDetail from './pages/ProductDetail';
+import ProductList from './pages/Products/ProductList';
+import ProductForm from './pages/Products/ProductForm';
+import ProductDetail from './pages/Products/ProductDetail';
 
 export default function App() {
   return (
@@ -39,7 +39,7 @@ export default function App() {
             <Route path="/blog/:slug" element={<BlogDetail />} />
 
             {/* Products Routes */}
-            <Route path="/products" element={<Products />} />
+            <Route path="/products" element={<ProductList />} />
             <Route path="/products/new" element={<ProductForm />} />
             <Route path="/products/:id" element={<ProductDetail />} />
             <Route path="/products/:id/edit" element={<ProductForm />} />

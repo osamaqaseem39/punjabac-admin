@@ -10,18 +10,22 @@ interface Product {
   gallery: string[];
 }
 
-const Products: React.FC = () => {
+const debug = true; // Set to true to show debug info in UI
+
+const ProductList: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+  const [apiResponse, setApiResponse] = useState<any>(null);
+  const [apiError, setApiError] = useState<string | null>(null);
 
   useEffect(() => {
     axios.get('/api/products')
       .then(res => {
-        console.log('Products API response:', res.data);
+        if (debug) setApiResponse(res.data);
         setProducts(Array.isArray(res.data) ? res.data : []);
       })
       .catch(err => {
-        console.error('Products API error:', err);
+        if (debug) setApiError(err.message);
         setProducts([]);
       })
       .finally(() => setLoading(false));
@@ -33,7 +37,16 @@ const Products: React.FC = () => {
         <h1 className="text-2xl font-bold">Products</h1>
         <Link to="/products/new" className="bg-blue-600 text-white px-4 py-2 rounded">Add Product</Link>
       </div>
-      {loading ? <div>Loading...</div> : (
+      {debug && (
+        <div className="mb-4 p-2 bg-yellow-100 text-yellow-800 rounded">
+          <div><b>Debug Mode:</b> {loading ? 'Deploying changes or loading data...' : 'Loaded.'}</div>
+          {apiResponse && <pre className="text-xs mt-2">API Response: {JSON.stringify(apiResponse, null, 2)}</pre>}
+          {apiError && <div className="text-xs mt-2 text-red-600">API Error: {apiError}</div>}
+        </div>
+      )}
+      {loading ? (
+        <div>Loading...</div>
+      ) : (
         Array.isArray(products) && products.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {products.map(product => (
@@ -58,4 +71,4 @@ const Products: React.FC = () => {
   );
 };
 
-export default Products; 
+export default ProductList; 
