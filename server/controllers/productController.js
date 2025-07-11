@@ -3,11 +3,8 @@ const Product = require('../models/Product');
 // Add a new product
 exports.addProduct = async (req, res) => {
   try {
-    console.log('Add Product Request Body:', req.body);
-    console.log('Add Product Request Files:', req.files);
-    const { title, description } = req.body;
-    const featuredImage = req.files['featuredImage'] ? req.files['featuredImage'][0].path : null;
-    const gallery = req.files['gallery'] ? req.files['gallery'].map(f => f.path) : [];
+    // Accept JSON payload with image URLs
+    const { title, description, featuredImage, gallery } = req.body;
     const product = new Product({ title, description, featuredImage, gallery });
     await product.save();
     res.status(201).json(product);
@@ -20,14 +17,8 @@ exports.addProduct = async (req, res) => {
 // Edit an existing product
 exports.editProduct = async (req, res) => {
   try {
-    const { title, description } = req.body;
-    const updateData = { title, description };
-    if (req.files['featuredImage']) {
-      updateData.featuredImage = req.files['featuredImage'][0].path;
-    }
-    if (req.files['gallery']) {
-      updateData.gallery = req.files['gallery'].map(f => f.path);
-    }
+    const { title, description, featuredImage, gallery } = req.body;
+    const updateData = { title, description, featuredImage, gallery };
     const product = await Product.findByIdAndUpdate(req.params.id, updateData, { new: true });
     if (!product) return res.status(404).json({ error: 'Product not found' });
     res.json(product);
