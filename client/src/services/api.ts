@@ -91,3 +91,39 @@ export const authApi = {
       }
     }),
 }; 
+
+export interface Product {
+  _id: string;
+  title: string;
+  description: string;
+  featuredImage?: string;
+  gallery?: string[];
+}
+
+export interface CreateProductInput {
+  title: string;
+  description: string;
+  featuredImage?: File;
+  gallery?: File[];
+}
+
+export interface UpdateProductInput {
+  title?: string;
+  description?: string;
+  featuredImage?: File;
+  gallery?: File[];
+}
+
+export const productApi = {
+  getAll: () => axios.get<Product[]>(`${BASE_URL}/products`),
+  getById: (id: string) => axios.get<Product>(`${BASE_URL}/products/${id}`),
+  create: (data: FormData) =>
+    axios.post<Product>(`${BASE_URL}/products`, data, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    }),
+  update: (id: string, data: FormData) =>
+    axios.put<Product>(`${BASE_URL}/products/${id}`, data, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    }),
+  delete: (id: string) => axios.delete(`${BASE_URL}/products/${id}`),
+}; 
