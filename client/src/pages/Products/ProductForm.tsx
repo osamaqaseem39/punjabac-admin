@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { productApi, Product } from '../../services/api';
 
@@ -10,6 +10,7 @@ const ProductForm: React.FC = () => {
   const [gallery, setGallery] = useState<File[]>([]);
   const [previewFeatured, setPreviewFeatured] = useState<string | null>(null);
   const [previewGallery, setPreviewGallery] = useState<string[]>([]);
+  const [existingGallery, setExistingGallery] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -19,9 +20,18 @@ const ProductForm: React.FC = () => {
         .then(res => {
           setProduct(res.data);
           setPreviewFeatured(res.data.featuredImage ? `/${res.data.featuredImage.replace('server/', '')}` : null);
-          setPreviewGallery(res.data.gallery ? res.data.gallery.map((img: string) => `/${img.replace('server/', '')}`) : []);
+          setExistingGallery(res.data.gallery ? res.data.gallery.map((img: string) => `/${img.replace('server/', '')}`) : []);
+          setPreviewGallery([]); // Only show new gallery images if selected
         })
         .finally(() => setLoading(false));
+    } else {
+      // Reset form for add
+      setProduct({ title: '', description: '' });
+      setFeaturedImage(null);
+      setGallery([]);
+      setPreviewFeatured(null);
+      setPreviewGallery([]);
+      setExistingGallery([]);
     }
   }, [id]);
 
@@ -49,14 +59,25 @@ const ProductForm: React.FC = () => {
     const formData = new FormData();
     formData.append('title', product.title as string);
     formData.append('description', product.description as string);
-    if (featuredImage) formData.append('featuredImage', featuredImage);
-    gallery.forEach((file, idx) => formData.append('gallery', file));
+    // Only send new featuredImage if selected
+    if (featuredImage) {
+      formData.append('featuredImage', featuredImage);
+    }
+    // Only send new gallery images if selected
+    gallery.forEach((file) => formData.append('gallery', file));
     setLoading(true);
     try {
       if (id) {
         await productApi.update(id, formData);
       } else {
         await productApi.create(formData);
+        // Reset form after add
+        setProduct({ title: '', description: '' });
+        setFeaturedImage(null);
+        setGallery([]);
+        setPreviewFeatured(null);
+        setPreviewGallery([]);
+        setExistingGallery([]);
       }
       navigate('/products');
     } catch (err) {
@@ -81,13 +102,17 @@ const ProductForm: React.FC = () => {
         <div>
           <label className="block font-semibold mb-1">Featured Image</label>
           <input type="file" accept="image/*" onChange={handleFeaturedChange} />
+          {/* Show preview of new or existing featured image */}
           {previewFeatured && <img src={previewFeatured} alt="Preview" className="h-32 mt-2 rounded" />}
         </div>
         <div>
           <label className="block font-semibold mb-1">Gallery Images</label>
           <input type="file" accept="image/*" multiple onChange={handleGalleryChange} />
           <div className="flex gap-2 mt-2 flex-wrap">
-            {previewGallery.map((src, idx) => <img key={idx} src={src} alt="Gallery Preview" className="h-20 rounded" />)}
+            {/* Show previews of new gallery images if selected */}
+            {previewGallery.map((src, idx) => <img key={src} src={src} alt="Gallery Preview" className="h-20 rounded" />)}
+            {/* Show existing gallery images if editing and no new images selected */}
+            {previewGallery.length === 0 && existingGallery.map((src, idx) => <img key={src} src={src} alt="Existing Gallery" className="h-20 rounded" />)}
           </div>
         </div>
         <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded" disabled={loading}>{loading ? 'Saving...' : 'Save Product'}</button>
