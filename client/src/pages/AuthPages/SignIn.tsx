@@ -186,12 +186,12 @@ export default function SignIn() {
           <div className="flex flex-col items-center max-w-xs">
             <Link to="/" className="block mb-4">
               <img
-                src="/images/logo/logo-white.svg"
+                src="/images/logo/logo.png"
                 alt="Logo"
                 className="dark:hidden"
               />
               <img
-                src="/images/logo/logo-dark.svg"
+                src="/images/logo/logo.png"
                 alt="Logo"
                 className="hidden dark:block"
               />
