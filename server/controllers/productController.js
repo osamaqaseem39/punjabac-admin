@@ -3,6 +3,8 @@ const Product = require('../models/Product');
 // Add a new product
 exports.addProduct = async (req, res) => {
   try {
+    console.log('Add Product Request Body:', req.body);
+    console.log('Add Product Request Files:', req.files);
     const { title, description } = req.body;
     const featuredImage = req.files['featuredImage'] ? req.files['featuredImage'][0].path : null;
     const gallery = req.files['gallery'] ? req.files['gallery'].map(f => f.path) : [];
@@ -10,7 +12,8 @@ exports.addProduct = async (req, res) => {
     await product.save();
     res.status(201).json(product);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error('Product creation error:', err);
+    res.status(500).json({ error: err.message, stack: err.stack });
   }
 };
 
