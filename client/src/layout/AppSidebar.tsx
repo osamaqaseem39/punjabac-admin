@@ -22,6 +22,11 @@ const navItems: NavItem[] = [
     icon: <DocsIcon />,
     name: "Blog",
     path: "/blog",
+  },
+  {
+    icon: <DocsIcon />,
+    name: "Products",
+    path: "/products",
   }
 ];
 
