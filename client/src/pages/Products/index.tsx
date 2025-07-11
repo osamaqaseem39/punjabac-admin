@@ -16,7 +16,14 @@ const Products: React.FC = () => {
 
   useEffect(() => {
     axios.get('/api/products')
-      .then(res => setProducts(Array.isArray(res.data) ? res.data : []))
+      .then(res => {
+        console.log('Products API response:', res.data);
+        setProducts(Array.isArray(res.data) ? res.data : []);
+      })
+      .catch(err => {
+        console.error('Products API error:', err);
+        setProducts([]);
+      })
       .finally(() => setLoading(false));
   }, []);
 
