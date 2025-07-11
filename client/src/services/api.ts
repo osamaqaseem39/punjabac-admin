@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BASE_URL = 'https://blog-managment-drab.vercel.app/api';
+const BASE_URL = 'https://punjabac-admin.vercel.app/api';
 
 // Add auth token to requests if it exists
 axios.interceptors.request.use((config) => {

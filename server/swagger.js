@@ -13,7 +13,7 @@ const options = {
     },
     servers: [
       {
-        url: 'https://blog-managment-drab.vercel.app',
+        url: 'https://punjabac-admin.vercel.app',
         description: 'Production Server',
       },
       {
