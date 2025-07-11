@@ -9,7 +9,7 @@ import Ecommerce from "./pages/Dashboard/ECommerce";
 import NotFound from "./pages/OtherPage/NotFound";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 import BlogList from "./pages/Blog/BlogList";
-import BlogAdd from "./pages/Blog/BlogAdd";
+import BlogForm from "./pages/Blog/BlogForm";
 import BlogDetail from "./pages/Blog/BlogDetail";
 import BlogEdit from "./pages/Blog/BlogEdit";
 import ProductList from './pages/Products/ProductList';
@@ -37,8 +37,8 @@ export default function App() {
 
             {/* Blog Routes */}
             <Route path="/blog" element={<BlogList />} />
-            <Route path="/blog/add" element={<BlogAdd />} />
-            <Route path="/blog/edit/:id" element={<BlogEdit />} />
+            <Route path="/blog/add" element={<BlogForm mode='add' />} />
+            <Route path="/blog/edit/:id" element={<BlogForm mode='edit' />} />
             <Route path="/blog/:slug" element={<BlogDetail />} />
 
             {/* Products Routes */}

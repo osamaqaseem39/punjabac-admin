@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, Link } from 'react-router-dom';
 import { productApi, Product } from '../../services/api';
 
 // Upload a file to cPanel server and return the public URL
@@ -115,6 +115,7 @@ const ProductForm: React.FC = () => {
 
   return (
     <div className="max-w-xl mx-auto p-4">
+      <Link to="/products" className="inline-block mb-2 px-4 py-1 bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition">← Back</Link>
       <h1 className="text-2xl font-bold mb-4">{id ? 'Edit' : 'Add'} Product</h1>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
