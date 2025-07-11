@@ -15,6 +15,9 @@ import BlogEdit from "./pages/Blog/BlogEdit";
 import ProductList from './pages/Products/ProductList';
 import ProductForm from './pages/Products/ProductForm';
 import ProductDetail from './pages/Products/ProductDetail';
+import ServiceList from './pages/Services/ServiceList';
+import ServiceForm from './pages/Services/ServiceForm';
+import ServiceDetail from './pages/Services/ServiceDetail';
 
 export default function App() {
   return (
@@ -43,6 +46,12 @@ export default function App() {
             <Route path="/products/add" element={<ProductForm />} />
             <Route path="/products/:id" element={<ProductDetail />} />
             <Route path="/products/:id/edit" element={<ProductForm />} />
+
+            {/* Services Routes */}
+            <Route path="/services" element={<ServiceList />} />
+            <Route path="/services/add" element={<ServiceForm />} />
+            <Route path="/services/:id" element={<ServiceDetail />} />
+            <Route path="/services/:id/edit" element={<ServiceForm />} />
           </Route>
 
           {/* Fallback Route */}

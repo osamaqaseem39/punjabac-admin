@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Blog, blogApi } from '../../services/api';
+import { Modal } from '../../components/ui/modal';
 
 const BlogList: React.FC = () => {
   const [blogs, setBlogs] = useState<Blog[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalImg, setModalImg] = useState<string | null>(null);
 
   useEffect(() => {
     fetchBlogs();
@@ -37,6 +40,11 @@ const BlogList: React.FC = () => {
     }
   };
 
+  const openModal = (img: string) => {
+    setModalImg(img.replace('server/', ''));
+    setModalOpen(true);
+  };
+
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -48,10 +56,10 @@ const BlogList: React.FC = () => {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-gray-800 dark:text-white">Blog Posts</h1>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Blog Posts</h1>
         <Link
           to="/blog/add"
-          className="bg-brand-500 text-white px-4 py-2 rounded-lg hover:bg-brand-600 transition-colors"
+          className="bg-blue-600 text-white px-5 py-2 rounded-lg shadow hover:bg-blue-700 transition"
         >
           Add New Post
         </Link>
@@ -63,48 +71,51 @@ const BlogList: React.FC = () => {
         </div>
       )}
 
-      <div className="grid gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {blogs.map((blog) => (
           <div
             key={blog._id}
-            className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 transition-all hover:shadow-lg"
+            className="bg-white dark:bg-gray-900 shadow-lg rounded-2xl p-4 flex flex-col hover:shadow-2xl transition-shadow"
           >
-            <div className="flex justify-between items-start">
-              <div>
-                <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-2">
-                  {blog.title}
-                </h2>
-                <p className="text-gray-600 dark:text-gray-300 mb-4">
-                  {blog.content.substring(0, 150)}...
-                </p>
-                <span className="text-sm text-gray-500 dark:text-gray-400">
-                  {new Date(blog.createdAt).toLocaleDateString()}
-                </span>
-              </div>
-              <div className="flex gap-2">
-                <Link
-                  to={`/blog/${blog.slug}`}
-                  className="text-brand-500 hover:text-brand-600 px-3 py-1 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700"
-                >
-                  View
-                </Link>
-                <Link
-                  to={`/blog/edit/${blog._id}`}
-                  className="text-blue-500 hover:text-blue-600 px-3 py-1 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700"
-                >
-                  Edit
-                </Link>
-                <button
-                  onClick={() => handleDelete(blog._id)}
-                  className="text-red-500 hover:text-red-600 px-3 py-1 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700"
-                >
-                  Delete
-                </button>
-              </div>
+            {blog.featuredImage && (
+              <img
+                src={blog.featuredImage.replace('server/', '')}
+                alt={blog.title}
+                className="h-48 w-full object-cover mb-3 rounded-lg cursor-pointer transition-transform hover:scale-105"
+                onClick={() => openModal(blog.featuredImage!)}
+              />
+            )}
+            <h2 className="text-xl font-semibold mb-1 text-gray-800 dark:text-gray-200">{blog.title}</h2>
+            <p className="text-sm text-gray-600 dark:text-gray-400 mb-2 line-clamp-3">{blog.content.substring(0, 150)}...</p>
+            <span className="text-xs text-gray-500 dark:text-gray-400 mb-4">{new Date(blog.createdAt).toLocaleDateString()}</span>
+            <div className="mt-auto flex gap-2 pt-4">
+              <Link
+                to={`/blog/${blog.slug}`}
+                className="px-3 py-1 bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition"
+              >
+                View
+              </Link>
+              <Link
+                to={`/blog/edit/${blog._id}`}
+                className="px-3 py-1 bg-yellow-100 text-yellow-700 rounded hover:bg-yellow-200 transition"
+              >
+                Edit
+              </Link>
+              <button
+                onClick={() => handleDelete(blog._id)}
+                className="px-3 py-1 bg-red-100 text-red-700 rounded hover:bg-red-200 transition"
+              >
+                Delete
+              </button>
             </div>
           </div>
         ))}
       </div>
+      <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)} isFullscreen={false}>
+        {modalImg && (
+          <img src={modalImg} alt="Preview" className="max-h-[80vh] max-w-full rounded-lg mx-auto" />
+        )}
+      </Modal>
     </div>
   );
 };

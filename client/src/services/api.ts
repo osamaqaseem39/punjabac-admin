@@ -19,6 +19,7 @@ export interface Blog {
   slug: string;
   createdAt: string;
   updatedAt: string;
+  featuredImage?: string;
 }
 
 export interface CreateBlogInput {
@@ -126,4 +127,37 @@ export const productApi = {
       headers: { 'Content-Type': 'multipart/form-data' }
     }),
   delete: (id: string) => axios.delete(`${BASE_URL}/products/${id}`),
+}; 
+
+export interface Service {
+  _id: string;
+  title: string;
+  description: string;
+  featuredImage?: string;
+}
+
+export interface CreateServiceInput {
+  title: string;
+  description: string;
+  featuredImage?: string;
+}
+
+export interface UpdateServiceInput {
+  title?: string;
+  description?: string;
+  featuredImage?: string;
+}
+
+export const serviceApi = {
+  getAll: () => axios.get<Service[]>(`${BASE_URL}/services`),
+  getById: (id: string) => axios.get<Service>(`${BASE_URL}/services/${id}`),
+  create: (data: CreateServiceInput) =>
+    axios.post<Service>(`${BASE_URL}/services`, data, {
+      headers: { 'Content-Type': 'application/json' }
+    }),
+  update: (id: string, data: UpdateServiceInput) =>
+    axios.put<Service>(`${BASE_URL}/services/${id}`, data, {
+      headers: { 'Content-Type': 'application/json' }
+    }),
+  delete: (id: string) => axios.delete(`${BASE_URL}/services/${id}`),
 }; 
