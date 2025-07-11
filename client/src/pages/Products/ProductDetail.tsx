@@ -1,14 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import axios from 'axios';
-
-interface Product {
-  _id: string;
-  title: string;
-  description: string;
-  featuredImage: string;
-  gallery: string[];
-}
+import { productApi, Product } from '../../services/api';
 
 const ProductDetail: React.FC = () => {
   const { id } = useParams();
@@ -16,9 +8,11 @@ const ProductDetail: React.FC = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    axios.get(`/api/products/${id}`)
-      .then(res => setProduct(res.data))
-      .finally(() => setLoading(false));
+    if (id) {
+      productApi.getById(id)
+        .then(res => setProduct(res.data))
+        .finally(() => setLoading(false));
+    }
   }, [id]);
 
   if (loading) return <div>Loading...</div>;

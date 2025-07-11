@@ -1,19 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import axios from 'axios';
-
-interface Product {
-  _id?: string;
-  title: string;
-  description: string;
-  featuredImage?: string;
-  gallery?: string[];
-}
+import { productApi, Product } from '../../services/api';
 
 const ProductForm: React.FC = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [product, setProduct] = useState<Product>({ title: '', description: '' });
+  const [product, setProduct] = useState<Partial<Product>>({ title: '', description: '' });
   const [featuredImage, setFeaturedImage] = useState<File | null>(null);
   const [gallery, setGallery] = useState<File[]>([]);
   const [previewFeatured, setPreviewFeatured] = useState<string | null>(null);
@@ -23,7 +15,7 @@ const ProductForm: React.FC = () => {
   useEffect(() => {
     if (id) {
       setLoading(true);
-      axios.get(`/api/products/${id}`)
+      productApi.getById(id)
         .then(res => {
           setProduct(res.data);
           setPreviewFeatured(res.data.featuredImage ? `/${res.data.featuredImage.replace('server/', '')}` : null);
@@ -55,16 +47,16 @@ const ProductForm: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const formData = new FormData();
-    formData.append('title', product.title);
-    formData.append('description', product.description);
+    formData.append('title', product.title as string);
+    formData.append('description', product.description as string);
     if (featuredImage) formData.append('featuredImage', featuredImage);
     gallery.forEach((file, idx) => formData.append('gallery', file));
     setLoading(true);
     try {
       if (id) {
-        await axios.put(`/api/products/${id}`, formData, { headers: { 'Content-Type': 'multipart/form-data' } });
+        await productApi.update(id, formData);
       } else {
-        await axios.post('/api/products', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
+        await productApi.create(formData);
       }
       navigate('/products');
     } catch (err) {
@@ -80,11 +72,11 @@ const ProductForm: React.FC = () => {
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label className="block font-semibold mb-1">Title</label>
-          <input type="text" name="title" value={product.title} onChange={handleChange} className="w-full border px-3 py-2 rounded" required />
+          <input type="text" name="title" value={product.title as string} onChange={handleChange} className="w-full border px-3 py-2 rounded" required />
         </div>
         <div>
           <label className="block font-semibold mb-1">Description</label>
-          <textarea name="description" value={product.description} onChange={handleChange} className="w-full border px-3 py-2 rounded" required />
+          <textarea name="description" value={product.description as string} onChange={handleChange} className="w-full border px-3 py-2 rounded" required />
         </div>
         <div>
           <label className="block font-semibold mb-1">Featured Image</label>

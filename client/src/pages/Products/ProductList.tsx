@@ -1,14 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
-
-interface Product {
-  _id: string;
-  title: string;
-  description: string;
-  featuredImage: string;
-  gallery: string[];
-}
+import { productApi, Product } from '../../services/api';
 
 const debug = true; // Set to true to show debug info in UI
 
@@ -19,7 +11,7 @@ const ProductList: React.FC = () => {
   const [apiError, setApiError] = useState<string | null>(null);
 
   useEffect(() => {
-    axios.get('/api/products')
+    productApi.getAll()
       .then(res => {
         if (debug) setApiResponse(res.data);
         setProducts(Array.isArray(res.data) ? res.data : []);
