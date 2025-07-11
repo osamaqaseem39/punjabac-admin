@@ -26,7 +26,12 @@ const navItems: NavItem[] = [
   {
     icon: <DocsIcon />,
     name: "Products",
-    path: "/products",
+    subItems: [
+      { name: "All Products", path: "/products" },
+      { name: "Add Product", path: "/products/add" },
+      // Template path for editing a product; replace :id with actual product ID in usage
+      { name: "Edit Product", path: "/products/:id/edit" },
+    ],
   }
 ];
 
