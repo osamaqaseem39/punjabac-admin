@@ -30,7 +30,7 @@ const ProductDetail: React.FC = () => {
           <h2 className="font-semibold mb-2">Gallery</h2>
           <div className="flex gap-2 flex-wrap">
             {product.gallery.map((img, idx) => (
-              <img key={idx} src={`/${img.replace('server/', '')}`} alt={`Gallery ${idx + 1}`} className="h-24 rounded" />
+              <img key={idx} src={`${img.replace('server/', '')}`} alt={`Gallery ${idx + 1}`} className="h-24 rounded" />
             ))}
           </div>
         </div>

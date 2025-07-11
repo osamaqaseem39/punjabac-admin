@@ -23,11 +23,19 @@ const ProductList: React.FC = () => {
       .finally(() => setLoading(false));
   }, []);
 
+  const handleDelete = async (id: string) => {
+    if (window.confirm('Are you sure you want to delete this product?')) {
+      await productApi.delete(id);
+      // Refresh the product list
+      setProducts(products => products.filter(p => p._id !== id));
+    }
+  };
+
   return (
     <div className="p-4">
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-bold">Products</h1>
-        <Link to="/products/new" className="bg-blue-600 text-white px-4 py-2 rounded">Add Product</Link>
+        <Link to="/products/add" className="bg-blue-600 text-white px-4 py-2 rounded">Add Product</Link>
       </div>
       {debug && (
         <div className="mb-4 p-2 bg-yellow-100 text-yellow-800 rounded">
@@ -44,13 +52,14 @@ const ProductList: React.FC = () => {
             {products.map(product => (
               <div key={product._id} className="border rounded p-4 flex flex-col">
                 {product.featuredImage && (
-                  <img src={`/${product.featuredImage.replace('server/', '')}`} alt={product.title} className="h-40 object-cover mb-2 rounded" />
+                  <img src={`${product.featuredImage.replace('server/', '')}`} alt={product.title} className="h-40 object-cover mb-2 rounded" />
                 )}
                 <h2 className="text-lg font-semibold mb-1">{product.title}</h2>
                 <p className="text-sm text-gray-600 mb-2 line-clamp-2">{product.description}</p>
                 <div className="mt-auto flex gap-2">
                   <Link to={`/products/${product._id}`} className="text-blue-600">View</Link>
                   <Link to={`/products/${product._id}/edit`} className="text-yellow-600">Edit</Link>
+                  <button onClick={() => handleDelete(product._id)} className="text-red-600">Delete</button>
                 </div>
               </div>
             ))}

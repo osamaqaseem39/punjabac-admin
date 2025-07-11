@@ -40,7 +40,7 @@ export default function App() {
 
             {/* Products Routes */}
             <Route path="/products" element={<ProductList />} />
-            <Route path="/products/new" element={<ProductForm />} />
+            <Route path="/products/add" element={<ProductForm />} />
             <Route path="/products/:id" element={<ProductDetail />} />
             <Route path="/products/:id/edit" element={<ProductForm />} />
           </Route>
