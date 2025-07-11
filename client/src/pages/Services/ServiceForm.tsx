@@ -2,6 +2,24 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { serviceApi, Service, CreateServiceInput, UpdateServiceInput } from '../../services/api';
 
+// Upload a file to cPanel server and return the public URL
+async function uploadToCpanel(file: File): Promise<string> {
+  const formData = new FormData();
+  const ext = file.name.split('.').pop();
+  const uniqueName = `${Date.now()}-${Math.random().toString(36).substring(2, 8)}.${ext}`;
+  formData.append('file', file, uniqueName);
+  const response = await fetch('https://osamaqaseem.online/upload.php', {
+    method: 'POST',
+    body: formData,
+  });
+  const data = await response.json();
+  if (data.url) {
+    return data.url;
+  } else {
+    throw new Error(data.error || 'Upload failed');
+  }
+}
+
 const ServiceForm: React.FC = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -12,6 +30,8 @@ const ServiceForm: React.FC = () => {
     description: '',
     featuredImage: ''
   });
+  const [featuredImageFile, setFeaturedImageFile] = useState<File | null>(null);
+  const [previewFeatured, setPreviewFeatured] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -19,13 +39,20 @@ const ServiceForm: React.FC = () => {
     if (isEdit && id) {
       setLoading(true);
       serviceApi.getById(id)
-        .then(res => setForm({
-          title: res.data.title,
-          description: res.data.description,
-          featuredImage: res.data.featuredImage || ''
-        }))
+        .then(res => {
+          setForm({
+            title: res.data.title,
+            description: res.data.description,
+            featuredImage: res.data.featuredImage || ''
+          });
+          setPreviewFeatured(res.data.featuredImage ? res.data.featuredImage : null);
+        })
         .catch(() => setError('Failed to load service'))
         .finally(() => setLoading(false));
+    } else {
+      setForm({ title: '', description: '', featuredImage: '' });
+      setFeaturedImageFile(null);
+      setPreviewFeatured(null);
     }
   }, [isEdit, id]);
 
@@ -33,15 +60,33 @@ const ServiceForm: React.FC = () => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
+  const handleFeaturedChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setFeaturedImageFile(e.target.files[0]);
+      setPreviewFeatured(URL.createObjectURL(e.target.files[0]));
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
     try {
+      let featuredImageUrl = form.featuredImage;
+      if (featuredImageFile) {
+        featuredImageUrl = await uploadToCpanel(featuredImageFile);
+      }
+      const payload = {
+        ...form,
+        featuredImage: featuredImageUrl,
+      };
       if (isEdit && id) {
-        await serviceApi.update(id, form as UpdateServiceInput);
+        await serviceApi.update(id, payload as UpdateServiceInput);
       } else {
-        await serviceApi.create(form);
+        await serviceApi.create(payload);
+        setForm({ title: '', description: '', featuredImage: '' });
+        setFeaturedImageFile(null);
+        setPreviewFeatured(null);
       }
       navigate('/services');
     } catch (err) {
@@ -78,17 +123,15 @@ const ServiceForm: React.FC = () => {
           />
         </div>
         <div>
-          <label className="block mb-1 font-semibold">Featured Image URL</label>
+          <label className="block mb-1 font-semibold">Featured Image</label>
           <input
-            type="text"
-            name="featuredImage"
-            value={form.featuredImage}
-            onChange={handleChange}
-            className="w-full border rounded px-3 py-2"
-            placeholder="https://..."
+            type="file"
+            accept="image/*"
+            onChange={handleFeaturedChange}
           />
-          {form.featuredImage && (
-            <img src={form.featuredImage.replace('server/', '')} alt="Preview" className="h-32 mt-2 rounded" />
+          {previewFeatured && <img src={previewFeatured} alt="Preview" className="h-32 mt-2 rounded" />}
+          {!previewFeatured && form.featuredImage && (
+            <img src={form.featuredImage} alt="Current" className="h-32 mt-2 rounded" />
           )}
         </div>
         {error && <div className="text-red-600">{error}</div>}
