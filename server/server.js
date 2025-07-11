@@ -21,8 +21,8 @@ app.use(cors({
   origin: [
     'http://localhost:3001', 
     'http://localhost:3000',
-    'https://blog-managment-excs.vercel.app',
-    'https://www.hypelet.pro'
+    'https://punjabac-admin-4nq8.vercel.app/',
+    'https://www.punjabac.com'
   ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
@@ -49,8 +49,8 @@ app.use((req, res, next) => {
   const allowedOrigins = [
     'http://localhost:3001', 
     'http://localhost:3000',
-    'https://blog-managment-excs.vercel.app',
-    'https://www.hypelet.pro'
+    'https://punjabac-admin-4nq8.vercel.app/',
+    'https://www.punjabac.com'
   ];
   const origin = req.headers.origin;
   if (allowedOrigins.includes(origin)) {
@@ -104,7 +104,7 @@ if (process.env.NODE_ENV !== 'production') {
 // MongoDB Connection with retry logic
 const connectDB = async () => {
   try {
-    const mongoURI = process.env.MONGODB_URI || 'mongodb://localhost:27017/blog-manager';
+    const mongoURI = process.env.MONGODB_URI;
     console.log('Attempting to connect to MongoDB...');
     console.log('MongoDB URI:', mongoURI.replace(/\/\/[^:]+:[^@]+@/, '//****:****@')); // Hide credentials in logs
 
