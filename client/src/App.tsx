@@ -11,7 +11,6 @@ import ProtectedRoute from "./components/auth/ProtectedRoute";
 import BlogList from "./pages/Blog/BlogList";
 import BlogForm from "./pages/Blog/BlogForm";
 import BlogDetail from "./pages/Blog/BlogDetail";
-import BlogEdit from "./pages/Blog/BlogEdit";
 import ProductList from './pages/Products/ProductList';
 import ProductForm from './pages/Products/ProductForm';
 import ProductDetail from './pages/Products/ProductDetail';
