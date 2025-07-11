@@ -6,6 +6,7 @@ import Label from "../../components/form/Label";
 import { EyeCloseIcon, EyeIcon } from "../../icons";
 import Checkbox from "../../components/form/input/Checkbox";
 import PageMeta from "../../components/common/PageMeta";
+import { authApi } from "../../services/api";
 
 interface FormData {
   firstName: string;
@@ -71,7 +72,7 @@ export default function SignUp() {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    
+
     if (!isChecked) {
       alert("Please accept the terms and conditions");
       return;
@@ -82,19 +83,32 @@ export default function SignUp() {
     }
 
     setIsLoading(true);
+    setErrors({});
     try {
-      // Replace this with your actual API call
-      // const response = await api.signup(formData);
-      // if (response.success) {
-      //   navigate("/signin");
-      // }
-      
-      // Temporary: simulating API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Combine firstName and lastName into username
+      const payload = {
+        username: `${formData.firstName} ${formData.lastName}`.trim(),
+        email: formData.email,
+        password: formData.password,
+      };
+      await authApi.register(payload);
       navigate("/signin");
-    } catch (error) {
-      console.error("Signup failed:", error);
-      alert("Failed to create account. Please try again.");
+    } catch (error: any) {
+      // Show error from backend if available
+      if (error.response && error.response.data && error.response.data.errors) {
+        const backendErrors = error.response.data.errors;
+        const newErrors: Partial<FormData> = {};
+        backendErrors.forEach((err: any) => {
+          if (err.param === "username") newErrors.firstName = err.msg;
+          if (err.param === "email") newErrors.email = err.msg;
+          if (err.param === "password") newErrors.password = err.msg;
+        });
+        setErrors(newErrors);
+      } else if (error.response && error.response.data && error.response.data.message) {
+        alert(error.response.data.message);
+      } else {
+        alert("Failed to create account. Please try again.");
+      }
     } finally {
       setIsLoading(false);
     }
