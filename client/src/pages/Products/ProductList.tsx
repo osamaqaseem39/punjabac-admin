@@ -3,24 +3,18 @@ import { Link } from 'react-router-dom';
 import { productApi, Product } from '../../services/api';
 import { Modal } from '../../components/ui/modal';
 
-const debug = true; // Set to true to show debug info in UI
-
 const ProductList: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
-  const [apiResponse, setApiResponse] = useState<any>(null);
-  const [apiError, setApiError] = useState<string | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [modalImg, setModalImg] = useState<string | null>(null);
 
   useEffect(() => {
     productApi.getAll()
       .then(res => {
-        if (debug) setApiResponse(res.data);
         setProducts(Array.isArray(res.data) ? res.data : []);
       })
-      .catch(err => {
-        if (debug) setApiError(err.message);
+      .catch(() => {
         setProducts([]);
       })
       .finally(() => setLoading(false));
@@ -29,7 +23,6 @@ const ProductList: React.FC = () => {
   const handleDelete = async (id: string) => {
     if (window.confirm('Are you sure you want to delete this product?')) {
       await productApi.delete(id);
-      // Refresh the product list
       setProducts(products => products.filter(p => p._id !== id));
     }
   };
@@ -45,13 +38,6 @@ const ProductList: React.FC = () => {
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Products</h1>
         <Link to="/products/add" className="bg-blue-600 text-white px-5 py-2 rounded-lg shadow hover:bg-blue-700 transition">Add Product</Link>
       </div>
-      {debug && (
-        <div className="mb-4 p-2 bg-yellow-100 text-yellow-800 rounded">
-          <div><b>Debug Mode:</b> {loading ? 'Deploying changes or loading data...' : 'Loaded.'}</div>
-          {apiResponse && <pre className="text-xs mt-2">API Response: {JSON.stringify(apiResponse, null, 2)}</pre>}
-          {apiError && <div className="text-xs mt-2 text-red-600">API Error: {apiError}</div>}
-        </div>
-      )}
       {loading ? (
         <div className="flex justify-center items-center h-64">Loading...</div>
       ) : (
