@@ -1,15 +1,6 @@
 import React, { useEffect, useState } from 'react';
-
-interface Quote {
-  _id: string;
-  name: string;
-  email: string;
-  phone: string;
-  details: string;
-  image?: string;
-  status: string;
-  createdAt: string;
-}
+import { quoteApi, Quote } from '../../services/api';
+import PageMeta from "../../components/common/PageMeta";
 
 const statusOptions = [
   { value: 'pending', label: 'Pending' },
@@ -31,10 +22,8 @@ const QuoteList: React.FC = () => {
   const fetchQuotes = async () => {
     setLoading(true);
     try {
-      const res = await fetch('/api/quotes');
-      if (!res.ok) throw new Error('Failed to fetch');
-      const data = await res.json();
-      setQuotes(data);
+      const res = await quoteApi.getAll();
+      setQuotes(res.data);
     } catch (err) {
       setError('Failed to load quotes.');
     } finally {
@@ -45,12 +34,7 @@ const QuoteList: React.FC = () => {
   const handleStatusChange = async (id: string, status: string) => {
     setUpdatingId(id);
     try {
-      const res = await fetch(`/api/quotes/${id}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status }),
-      });
-      if (!res.ok) throw new Error('Failed to update status');
+      await quoteApi.update(id, { status });
       setQuotes((prev) => prev.map(q => q._id === id ? { ...q, status } : q));
     } catch (err) {
       alert('Failed to update status.');
@@ -60,8 +44,13 @@ const QuoteList: React.FC = () => {
   };
 
   return (
-    <div className="p-8">
-      <h1 className="text-2xl font-bold mb-6">Quote Requests</h1>
+    <>
+      <PageMeta
+        title="Quote Requests"
+        description="Manage customer quote requests and their status."
+      />
+      <div className="p-8">
+        <h1 className="text-2xl font-bold mb-6">Quote Requests</h1>
       {loading && <div>Loading...</div>}
       {error && <div className="text-red-600">{error}</div>}
       {!loading && !error && (
@@ -113,7 +102,8 @@ const QuoteList: React.FC = () => {
           </table>
         </div>
       )}
-    </div>
+      </div>
+    </>
   );
 };
 

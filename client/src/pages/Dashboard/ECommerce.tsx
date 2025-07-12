@@ -34,7 +34,7 @@ export default function Ecommerce() {
         <h1 className="text-3xl font-bold mb-2">Welcome to the Admin Dashboard!</h1>
         <p className="text-gray-600">Manage your products, blogs, and services from one place.</p>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <div className="bg-white dark:bg-gray-900 shadow rounded-xl p-6 flex flex-col items-center">
           <span className="text-4xl font-bold text-indigo-600">{products.length}</span>
           <span className="mt-2 text-lg font-semibold">Products</span>
@@ -46,6 +46,10 @@ export default function Ecommerce() {
         <div className="bg-white dark:bg-gray-900 shadow rounded-xl p-6 flex flex-col items-center">
           <span className="text-4xl font-bold text-purple-600">{services.length}</span>
           <span className="mt-2 text-lg font-semibold">Services</span>
+        </div>
+        <div className="bg-white dark:bg-gray-900 shadow rounded-xl p-6 flex flex-col items-center">
+          <span className="text-4xl font-bold text-orange-600">{quotes.filter(q => q.status === 'pending').length}</span>
+          <span className="mt-2 text-lg font-semibold">Pending Quotes</span>
         </div>
       </div>
       {loading ? (
