@@ -3,27 +3,9 @@ const Product = require('../models/Product');
 // Add a new product
 exports.addProduct = async (req, res) => {
   try {
-    const { title, description } = req.body;
-    
-    // Handle file uploads
-    let featuredImage = null;
-    let gallery = [];
-    
-    if (req.files) {
-      if (req.files.featuredImage && req.files.featuredImage[0]) {
-        featuredImage = `/uploads/products/${req.files.featuredImage[0].filename}`;
-      }
-      
-      if (req.files.gallery) {
-        gallery = req.files.gallery.map(file => `/uploads/products/${file.filename}`);
-      }
-    } else {
-      // Fallback for JSON payload with image URLs
-      featuredImage = req.body.featuredImage || null;
-      gallery = req.body.gallery || [];
-    }
-    
-    const product = new Product({ title, description, featuredImage, gallery });
+    const { title, description, featuredImage, gallery } = req.body;
+    // Always use featuredImage from req.body as a string
+    const product = new Product({ title, description, featuredImage: featuredImage || '', gallery: gallery || [] });
     await product.save();
     res.status(201).json(product);
   } catch (err) {
@@ -35,27 +17,9 @@ exports.addProduct = async (req, res) => {
 // Edit an existing product
 exports.editProduct = async (req, res) => {
   try {
-    const { title, description } = req.body;
-    
-    // Handle file uploads
-    let featuredImage = null;
-    let gallery = [];
-    
-    if (req.files) {
-      if (req.files.featuredImage && req.files.featuredImage[0]) {
-        featuredImage = `/uploads/products/${req.files.featuredImage[0].filename}`;
-      }
-      
-      if (req.files.gallery) {
-        gallery = req.files.gallery.map(file => `/uploads/products/${file.filename}`);
-      }
-    } else {
-      // Fallback for JSON payload with image URLs
-      featuredImage = req.body.featuredImage || null;
-      gallery = req.body.gallery || [];
-    }
-    
-    const updateData = { title, description, featuredImage, gallery };
+    const { title, description, featuredImage, gallery } = req.body;
+    // Always use featuredImage from req.body as a string
+    const updateData = { title, description, featuredImage: featuredImage || '', gallery: gallery || [] };
     const product = await Product.findByIdAndUpdate(req.params.id, updateData, { new: true });
     if (!product) return res.status(404).json({ error: 'Product not found' });
     res.json(product);
