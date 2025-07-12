@@ -129,17 +129,74 @@ const ProductForm: React.FC = () => {
         <div>
           <label className="block font-semibold mb-1">Featured Image</label>
           <input type="file" accept="image/*" onChange={handleFeaturedChange} />
-          {previewFeatured && <img src={previewFeatured} alt="Preview" className="h-32 mt-2 rounded" />}
+          {previewFeatured && (
+            <div className="relative inline-block">
+              <img src={previewFeatured} alt="Preview" className="h-32 mt-2 rounded" />
+              <button
+                type="button"
+                className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1"
+                onClick={() => {
+                  setPreviewFeatured(null);
+                  setFeaturedImageFile(null);
+                  setProduct({ ...product, featuredImage: '' });
+                }}
+                title="Remove image"
+              >
+                &times;
+              </button>
+            </div>
+          )}
           {!previewFeatured && product.featuredImage && (
-            <img src={product.featuredImage} alt="Current" className="h-32 mt-2 rounded" />
+            <div className="relative inline-block">
+              <img src={product.featuredImage} alt="Current" className="h-32 mt-2 rounded" />
+              <button
+                type="button"
+                className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1"
+                onClick={() => {
+                  setProduct({ ...product, featuredImage: '' });
+                }}
+                title="Remove image"
+              >
+                &times;
+              </button>
+            </div>
           )}
         </div>
         <div>
           <label className="block font-semibold mb-1">Gallery Images</label>
           <input type="file" accept="image/*" multiple onChange={handleGalleryChange} />
           <div className="flex gap-2 mt-2 flex-wrap">
-            {previewGallery.map((src, idx) => <img key={src} src={src} alt="Gallery Preview" className="h-20 rounded" />)}
-            {previewGallery.length === 0 && existingGallery.map((src, idx) => <img key={src} src={src} alt="Existing Gallery" className="h-20 rounded" />)}
+            {previewGallery.map((src, idx) => (
+              <div key={src} className="relative inline-block">
+                <img src={src} alt="Gallery Preview" className="h-20 rounded" />
+                <button
+                  type="button"
+                  className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1"
+                  onClick={() => {
+                    setPreviewGallery(previewGallery.filter((_, i) => i !== idx));
+                    setGalleryFiles(galleryFiles.filter((_, i) => i !== idx));
+                  }}
+                  title="Remove image"
+                >
+                  &times;
+                </button>
+              </div>
+            ))}
+            {previewGallery.length === 0 && existingGallery.map((src, idx) => (
+              <div key={src} className="relative inline-block">
+                <img src={src} alt="Existing Gallery" className="h-20 rounded" />
+                <button
+                  type="button"
+                  className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1"
+                  onClick={() => {
+                    setExistingGallery(existingGallery.filter((_, i) => i !== idx));
+                  }}
+                  title="Remove image"
+                >
+                  &times;
+                </button>
+              </div>
+            ))}
           </div>
         </div>
         <button type="submit" className="bg-indigo-600 text-white px-4 py-2 rounded" disabled={loading}>{loading ? 'Saving...' : 'Save Product'}</button>

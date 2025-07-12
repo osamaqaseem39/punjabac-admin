@@ -6,12 +6,32 @@ interface BlogFormProps {
   mode: 'add' | 'edit';
 }
 
+// Upload a file to cPanel server and return the public URL
+async function uploadToCpanel(file: File): Promise<string> {
+  const formData = new FormData();
+  const ext = file.name.split('.').pop();
+  const uniqueName = `${Date.now()}-${Math.random().toString(36).substring(2, 8)}.${ext}`;
+  formData.append('file', file, uniqueName);
+  const response = await fetch('https://osamaqaseem.online/upload.php', {
+    method: 'POST',
+    body: formData,
+  });
+  const data = await response.json();
+  if (data.url) {
+    return data.url;
+  } else {
+    throw new Error(data.error || 'Upload failed');
+  }
+}
+
 const BlogForm: React.FC<BlogFormProps> = ({ mode }) => {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(mode === 'edit');
   const [preview, setPreview] = useState('');
+  const [featuredImageFile, setFeaturedImageFile] = useState<File | null>(null);
+  const [previewFeatured, setPreviewFeatured] = useState<string | null>(null);
   const [formData, setFormData] = useState<CreateBlogInput>({
     title: '',
     content: '',
@@ -80,6 +100,7 @@ const BlogForm: React.FC<BlogFormProps> = ({ mode }) => {
             ...blogData,
             slug
           });
+          setPreviewFeatured(response.data.featuredImage || null);
           setError(null);
         } catch (err) {
           setError('Failed to fetch blog. Please try again later.');
@@ -100,8 +121,12 @@ const BlogForm: React.FC<BlogFormProps> = ({ mode }) => {
 
     try {
       const slug = generateSlug(formData.title);
+      let featuredImageUrl = formData.featuredImage;
+      if (featuredImageFile) {
+        featuredImageUrl = await uploadToCpanel(featuredImageFile);
+      }
       if (mode === 'add') {
-        await blogApi.create({ ...formData, slug });
+        await blogApi.create({ ...formData, slug, featuredImage: featuredImageUrl });
         navigate('/blog');
       } else if (mode === 'edit' && id) {
         await blogApi.update(id, formData);
@@ -122,6 +147,13 @@ const BlogForm: React.FC<BlogFormProps> = ({ mode }) => {
       [name]: value,
       ...(name === 'title' ? { slug: generateSlug(value) } : {})
     }));
+  };
+
+  const handleFeaturedChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setFeaturedImageFile(e.target.files[0]);
+      setPreviewFeatured(URL.createObjectURL(e.target.files[0]));
+    }
   };
 
   const insertFormatting = (format: string) => {
@@ -234,6 +266,43 @@ const BlogForm: React.FC<BlogFormProps> = ({ mode }) => {
             <option value="draft">Draft</option>
             <option value="published">Published</option>
           </select>
+        </div>
+
+        <div>
+          <label className="block font-semibold mb-1">Featured Image</label>
+          <input type="file" accept="image/*" onChange={handleFeaturedChange} />
+          {previewFeatured && (
+            <div className="relative inline-block">
+              <img src={previewFeatured} alt="Preview" className="h-32 mt-2 rounded" />
+              <button
+                type="button"
+                className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1"
+                onClick={() => {
+                  setPreviewFeatured(null);
+                  setFeaturedImageFile(null);
+                  setFormData(prev => ({ ...prev, featuredImage: '' }));
+                }}
+                title="Remove image"
+              >
+                &times;
+              </button>
+            </div>
+          )}
+          {!previewFeatured && formData.featuredImage && (
+            <div className="relative inline-block">
+              <img src={formData.featuredImage} alt="Current" className="h-32 mt-2 rounded" />
+              <button
+                type="button"
+                className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1"
+                onClick={() => {
+                  setFormData(prev => ({ ...prev, featuredImage: '' }));
+                }}
+                title="Remove image"
+              >
+                &times;
+              </button>
+            </div>
+          )}
         </div>
 
         <div>

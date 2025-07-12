@@ -27,12 +27,14 @@ export interface CreateBlogInput {
   content: string;
   status: 'draft' | 'published';
   slug: string;
+  featuredImage?: string;
 }
 
 export interface UpdateBlogInput {
   title: string;
   content: string;
   status: 'draft' | 'published';
+  featuredImage?: string;
 }
 
 export const blogApi = {

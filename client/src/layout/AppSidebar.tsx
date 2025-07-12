@@ -43,7 +43,7 @@ const navItems: NavItem[] = [
   {
     icon: <ChatIcon />,
     name: "Quotes",
-    path: "/quotes/QuoteList",
+    path: "/quotes",
   },
 ];
 

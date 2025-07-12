@@ -130,9 +130,37 @@ const ServiceForm: React.FC = () => {
             accept="image/*"
             onChange={handleFeaturedChange}
           />
-          {previewFeatured && <img src={previewFeatured} alt="Preview" className="h-32 mt-2 rounded" />}
+          {previewFeatured && (
+            <div className="relative inline-block">
+              <img src={previewFeatured} alt="Preview" className="h-32 mt-2 rounded" />
+              <button
+                type="button"
+                className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1"
+                onClick={() => {
+                  setPreviewFeatured(null);
+                  setFeaturedImageFile(null);
+                  setForm({ ...form, featuredImage: '' });
+                }}
+                title="Remove image"
+              >
+                &times;
+              </button>
+            </div>
+          )}
           {!previewFeatured && form.featuredImage && (
-            <img src={form.featuredImage} alt="Current" className="h-32 mt-2 rounded" />
+            <div className="relative inline-block">
+              <img src={form.featuredImage} alt="Current" className="h-32 mt-2 rounded" />
+              <button
+                type="button"
+                className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1"
+                onClick={() => {
+                  setForm({ ...form, featuredImage: '' });
+                }}
+                title="Remove image"
+              >
+                &times;
+              </button>
+            </div>
           )}
         </div>
         {error && <div className="text-red-600">{error}</div>}

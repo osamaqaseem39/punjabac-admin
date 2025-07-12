@@ -117,7 +117,7 @@ export default function Ecommerce() {
           <div className="mb-8">
             <div className="flex justify-between items-center mb-2">
               <h2 className="text-xl font-bold">Recent Quotes</h2>
-              <Link to="/quotes/QuoteList" className="text-indigo-600 hover:underline">View All</Link>
+              <Link to="/quotes" className="text-indigo-600 hover:underline">View All</Link>
             </div>
             <div className="overflow-x-auto">
               <table className="min-w-full border border-gray-200 rounded-lg">

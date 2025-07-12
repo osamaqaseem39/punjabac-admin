@@ -17,7 +17,6 @@ import ProductDetail from './pages/Products/ProductDetail';
 import ServiceList from './pages/Services/ServiceList';
 import ServiceForm from './pages/Services/ServiceForm';
 import ServiceDetail from './pages/Services/ServiceDetail';
-import QuoteList from './pages/Quotes/QuoteList';
 
 export default function App() {
   return (
@@ -52,9 +51,6 @@ export default function App() {
             <Route path="/services/add" element={<ServiceForm />} />
             <Route path="/services/:id" element={<ServiceDetail />} />
             <Route path="/services/:id/edit" element={<ServiceForm />} />
-
-            {/* Quotes Routes */}
-            <Route path="/quotes/QuoteList" element={<QuoteList />} />
           </Route>
 
           {/* Fallback Route */}
