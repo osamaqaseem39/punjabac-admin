@@ -24,6 +24,7 @@ app.use(cors({
     'http://localhost:3001', 
     'http://localhost:3000',
     'https://punjabac-admin-4nq8.vercel.app',
+    'https://punjabac.osamaqaseem.online',
     'https://www.punjabac.com'
   ],
   credentials: true,
@@ -52,6 +53,8 @@ app.use((req, res, next) => {
     'http://localhost:3001', 
     'http://localhost:3000',
     'https://punjabac-admin-4nq8.vercel.app',
+    
+    'https://punjabac.osamaqaseem.online',
     'https://www.punjabac.com'
   ];
   const origin = req.headers.origin;
