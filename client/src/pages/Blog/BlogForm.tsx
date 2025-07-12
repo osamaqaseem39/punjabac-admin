@@ -124,12 +124,13 @@ const BlogForm: React.FC<BlogFormProps> = ({ mode }) => {
       let featuredImageUrl = formData.featuredImage;
       if (featuredImageFile) {
         featuredImageUrl = await uploadToCpanel(featuredImageFile);
+        setFormData(prev => ({ ...prev, featuredImage: featuredImageUrl })); // Ensure state is updated
       }
       if (mode === 'add') {
         await blogApi.create({ ...formData, slug, featuredImage: featuredImageUrl });
         navigate('/blog');
       } else if (mode === 'edit' && id) {
-        await blogApi.update(id, formData);
+        await blogApi.update(id, { ...formData, featuredImage: featuredImageUrl });
         navigate(`/blog`);
       }
     } catch (err) {
@@ -153,6 +154,8 @@ const BlogForm: React.FC<BlogFormProps> = ({ mode }) => {
     if (e.target.files && e.target.files[0]) {
       setFeaturedImageFile(e.target.files[0]);
       setPreviewFeatured(URL.createObjectURL(e.target.files[0]));
+      // Clear the previous featuredImage in formData so it doesn't get sent accidentally
+      setFormData(prev => ({ ...prev, featuredImage: '' }));
     }
   };
 
