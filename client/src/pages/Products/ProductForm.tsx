@@ -5,7 +5,6 @@ import { productApi, Product } from '../../services/api';
 // Upload a file to cPanel server and return the public URL
 async function uploadToCpanel(file: File): Promise<string> {
   const formData = new FormData();
-  // Generate a unique filename
   const ext = file.name.split('.').pop();
   const uniqueName = `${Date.now()}-${Math.random().toString(36).substring(2, 8)}.${ext}`;
   formData.append('file', file, uniqueName);
