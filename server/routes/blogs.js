@@ -218,7 +218,7 @@ router.post('/',
         return res.status(400).json({ errors: errors.array() });
       }
 
-      const { title, content, tags, status } = req.body;
+      const { title, content, tags, status, featuredImage } = req.body;
 
       // Log the request data for debugging
       console.log('Creating blog with data:', {
@@ -239,7 +239,8 @@ router.post('/',
         content,
         tags: tags || [],
         status: status || 'draft',
-        author: req.user.userId
+        author: req.user.userId,
+        featuredImage: featuredImage || null
       });
 
       // Log the blog object before saving
@@ -373,7 +374,7 @@ router.put('/:id',
         });
       }
 
-      const { title, content, tags, status } = req.body;
+      const { title, content, tags, status, featuredImage } = req.body;
 
       // Only update fields that are provided
       const updates = {};
@@ -381,6 +382,7 @@ router.put('/:id',
       if (content !== undefined) updates.content = content;
       if (tags !== undefined) updates.tags = tags;
       if (status !== undefined) updates.status = status;
+      if (featuredImage !== undefined) updates.featuredImage = featuredImage;
 
       // Add last modified timestamp
       updates.lastModified = new Date();
