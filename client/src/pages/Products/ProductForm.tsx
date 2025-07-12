@@ -89,11 +89,14 @@ const ProductForm: React.FC = () => {
       } else if (existingGallery.length > 0) {
         galleryUrls = existingGallery;
       }
+      // Always set featuredImage and gallery, even if empty
       const payload = {
         ...product,
-        featuredImage: featuredImageUrl,
-        gallery: galleryUrls,
+        featuredImage: featuredImageUrl || '',
+        gallery: galleryUrls.length > 0 ? galleryUrls : [],
       };
+      // Debug log
+      console.log('Submitting product:', payload);
       if (id) {
         await productApi.update(id, payload as any);
       } else {

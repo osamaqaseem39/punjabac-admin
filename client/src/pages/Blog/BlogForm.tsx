@@ -125,13 +125,19 @@ const BlogForm: React.FC<BlogFormProps> = ({ mode }) => {
       if (featuredImageFile) {
         featuredImageUrl = await uploadToCpanel(featuredImageFile);
       }
-      // Debug: log the payload
-      console.log('Submitting blog:', { ...formData, slug, featuredImage: featuredImageUrl });
+      // Always set featuredImage, even if empty
+      const payload = {
+        ...formData,
+        slug,
+        featuredImage: featuredImageUrl || '',
+      };
+      // Debug log
+      console.log('Submitting blog:', payload);
       if (mode === 'add') {
-        await blogApi.create({ ...formData, slug, featuredImage: featuredImageUrl });
+        await blogApi.create(payload);
         navigate('/blog');
       } else if (mode === 'edit' && id) {
-        await blogApi.update(id, { ...formData, featuredImage: featuredImageUrl });
+        await blogApi.update(id, payload);
         navigate(`/blog`);
       }
     } catch (err) {

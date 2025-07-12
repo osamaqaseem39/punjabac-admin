@@ -76,10 +76,13 @@ const ServiceForm: React.FC = () => {
       if (featuredImageFile) {
         featuredImageUrl = await uploadToCpanel(featuredImageFile);
       }
+      // Always set featuredImage, even if empty
       const payload = {
         ...form,
-        featuredImage: featuredImageUrl,
+        featuredImage: featuredImageUrl || '',
       };
+      // Debug log
+      console.log('Submitting service:', payload);
       if (isEdit && id) {
         await serviceApi.update(id, payload as UpdateServiceInput);
       } else {
