@@ -161,3 +161,24 @@ export const serviceApi = {
     }),
   delete: (id: string) => axios.delete(`${BASE_URL}/services/${id}`),
 }; 
+
+export interface Quote {
+  _id: string;
+  name: string;
+  email: string;
+  phone: string;
+  details: string;
+  image?: string;
+  status: string;
+  createdAt: string;
+}
+
+export const quoteApi = {
+  getAll: () => axios.get<Quote[]>(`${BASE_URL}/quotes`),
+  getById: (id: string) => axios.get<Quote>(`${BASE_URL}/quotes/${id}`),
+  update: (id: string, data: { status: string }) =>
+    axios.put<Quote>(`${BASE_URL}/quotes/${id}`, data, {
+      headers: { 'Content-Type': 'application/json' }
+    }),
+  delete: (id: string) => axios.delete(`${BASE_URL}/quotes/${id}`),
+};

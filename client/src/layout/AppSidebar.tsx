@@ -7,6 +7,7 @@ import {
   ChevronDownIcon,
   HorizontaLDots,
   DocsIcon,
+  ChatIcon,
 } from "../icons";
 
 type NavItem = {
@@ -38,6 +39,11 @@ const navItems: NavItem[] = [
       { name: "All Services", path: "/services" },
       { name: "Add Service", path: "/services/add" },
     ],
+  },
+  {
+    icon: <ChatIcon />,
+    name: "Quotes",
+    path: "/quotes/QuoteList",
   },
 ];
 

@@ -1,18 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { productApi, blogApi, serviceApi, Product, Blog, Service } from '../../services/api';
+import { productApi, blogApi, serviceApi, quoteApi, Product, Blog, Service, Quote } from '../../services/api';
 import PageMeta from "../../components/common/PageMeta";
-
-interface Quote {
-  _id: string;
-  name: string;
-  email: string;
-  phone: string;
-  details: string;
-  image?: string;
-  status: string;
-  createdAt: string;
-}
 
 export default function Ecommerce() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -26,12 +15,12 @@ export default function Ecommerce() {
       productApi.getAll(),
       blogApi.getAll(),
       serviceApi.getAll(),
-      fetch('/api/quotes').then(res => res.json())
+      quoteApi.getAll()
     ]).then(([prodRes, blogRes, servRes, quotesRes]) => {
       setProducts(Array.isArray(prodRes.data) ? prodRes.data : []);
       setBlogs(Array.isArray(blogRes.data) ? blogRes.data : []);
       setServices(Array.isArray(servRes.data) ? servRes.data : []);
-      setQuotes(Array.isArray(quotesRes) ? quotesRes : []);
+      setQuotes(Array.isArray(quotesRes.data) ? quotesRes.data : []);
     }).finally(() => setLoading(false));
   }, []);
 
