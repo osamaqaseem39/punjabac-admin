@@ -115,7 +115,7 @@ const ProductForm: React.FC = () => {
 
   return (
     <div className="max-w-xl mx-auto p-4">
-      <Link to="/products" className="inline-block mb-2 px-4 py-1 bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition">← Back</Link>
+      <Link to="/products" className="inline-block mb-2 px-4 py-1 bg-indigo-100 text-indigo-700 rounded hover:bg-indigo-200 transition">← Back</Link>
       <h1 className="text-2xl font-bold mb-4">{id ? 'Edit' : 'Add'} Product</h1>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
@@ -142,7 +142,7 @@ const ProductForm: React.FC = () => {
             {previewGallery.length === 0 && existingGallery.map((src, idx) => <img key={src} src={src} alt="Existing Gallery" className="h-20 rounded" />)}
           </div>
         </div>
-        <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded" disabled={loading}>{loading ? 'Saving...' : 'Save Product'}</button>
+        <button type="submit" className="bg-indigo-600 text-white px-4 py-2 rounded" disabled={loading}>{loading ? 'Saving...' : 'Save Product'}</button>
       </form>
     </div>
   );

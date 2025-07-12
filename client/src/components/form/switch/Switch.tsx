@@ -5,7 +5,7 @@ interface SwitchProps {
   defaultChecked?: boolean;
   disabled?: boolean;
   onChange?: (checked: boolean) => void;
-  color?: "blue" | "gray"; // Added prop to toggle color theme
+  color?: "indigo" | "gray"; // Added prop to toggle color theme
 }
 
 const Switch: React.FC<SwitchProps> = ({
@@ -13,7 +13,7 @@ const Switch: React.FC<SwitchProps> = ({
   defaultChecked = false,
   disabled = false,
   onChange,
-  color = "blue", // Default to blue color
+  color = "indigo", // Default to indigo color
 }) => {
   const [isChecked, setIsChecked] = useState(defaultChecked);
 
@@ -27,11 +27,11 @@ const Switch: React.FC<SwitchProps> = ({
   };
 
   const switchColors =
-    color === "blue"
+    color === "indigo"
       ? {
           background: isChecked
             ? "bg-brand-500 "
-            : "bg-gray-200 dark:bg-white/10", // Blue version
+            : "bg-gray-200 dark:bg-white/10", // indigo version
           knob: isChecked
             ? "translate-x-full bg-white"
             : "translate-x-0 bg-white",

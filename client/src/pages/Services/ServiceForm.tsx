@@ -98,7 +98,7 @@ const ServiceForm: React.FC = () => {
 
   return (
     <div className="max-w-xl mx-auto p-4">
-      <Link to="/services" className="inline-block mb-2 px-4 py-1 bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition">← Back</Link>
+      <Link to="/services" className="inline-block mb-2 px-4 py-1 bg-indigo-100 text-indigo-700 rounded hover:bg-indigo-200 transition">← Back</Link>
       <h1 className="text-2xl font-bold mb-4">{isEdit ? 'Edit Service' : 'Add Service'}</h1>
       <form onSubmit={handleSubmit} className="bg-white dark:bg-gray-900 shadow-lg rounded-2xl p-6 flex flex-col gap-4">
         <div>
@@ -138,7 +138,7 @@ const ServiceForm: React.FC = () => {
         {error && <div className="text-red-600">{error}</div>}
         <button
           type="submit"
-          className="bg-blue-600 text-white px-5 py-2 rounded-lg shadow hover:bg-blue-700 transition"
+          className="bg-indigo-600 text-white px-5 py-2 rounded-lg shadow hover:bg-indigo-700 transition"
           disabled={loading}
         >
           {loading ? 'Saving...' : isEdit ? 'Update Service' : 'Add Service'}

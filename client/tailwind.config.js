@@ -43,7 +43,7 @@ module.exports = {
           900: "#262E89",
           950: "#161950",
         },
-        "blue-light": {
+        "indigo-light": {
           25: "#F5FBFF",
           50: "#F0F9FF",
           100: "#E0F2FE",

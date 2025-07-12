@@ -57,7 +57,7 @@ const ProductDetail: React.FC = () => {
         )}
         <Link
           to="/products"
-          className="inline-block mt-4 px-5 py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition"
+          className="inline-block mt-4 px-5 py-2 bg-indigo-600 text-white rounded-lg shadow hover:bg-indigo-700 transition"
         >
           ← Back to Products
         </Link>

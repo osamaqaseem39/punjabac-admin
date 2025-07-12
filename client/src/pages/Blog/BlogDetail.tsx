@@ -79,7 +79,7 @@ const BlogDetail: React.FC = () => {
           <div className="flex gap-2">
             <Link
               to={`/blog/edit/${blog._id}`}
-              className="text-blue-500 hover:text-blue-600 px-3 py-1 rounded-md hover:bg-gray-100"
+              className="text-indigo-500 hover:text-indigo-600 px-3 py-1 rounded-md hover:bg-gray-100"
             >
               Edit
             </Link>

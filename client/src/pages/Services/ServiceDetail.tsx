@@ -52,7 +52,7 @@ const ServiceDetail: React.FC = () => {
         <div className="flex gap-2 mt-4">
           <Link
             to="/services"
-            className="px-4 py-2 bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition"
+            className="px-4 py-2 bg-indigo-100 text-indigo-700 rounded hover:bg-indigo-200 transition"
           >
             ← Back to Services
           </Link>

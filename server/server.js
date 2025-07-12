@@ -11,6 +11,7 @@ const authRoutes = require('./routes/auth');
 const blogRoutes = require('./routes/blogs');
 const productRoutes = require('./routes/products');
 const serviceRoutes = require('./routes/services');
+const quoteRoutes = require('./routes/quotes');
 
 // Load environment variables
 dotenv.config();
@@ -171,6 +172,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/blogs', blogRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/services', serviceRoutes);
+app.use('/api/quotes', quoteRoutes);
 app.use('/uploads/products', express.static(path.join(__dirname, '../uploads/products')));
 
 // Root route for API health check
