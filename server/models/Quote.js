@@ -6,7 +6,9 @@ const quoteSchema = new mongoose.Schema({
   phone: { type: String, required: true },
   details: { type: String, required: true },
   image: { type: String },
-  createdAt: { type: Date, default: Date.now },
+  status: { type: String, enum: ['pending', 'in_progress', 'completed', 'rejected'], default: 'pending' },
+  createdAt: { type: Date, default: Date.now }
 });
 
-module.exports = mongoose.model('Quote', quoteSchema); 
+const Quote = mongoose.model('Quote', quoteSchema);
+module.exports = Quote; 
