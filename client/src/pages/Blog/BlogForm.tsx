@@ -124,8 +124,9 @@ const BlogForm: React.FC<BlogFormProps> = ({ mode }) => {
       let featuredImageUrl = formData.featuredImage;
       if (featuredImageFile) {
         featuredImageUrl = await uploadToCpanel(featuredImageFile);
-        setFormData(prev => ({ ...prev, featuredImage: featuredImageUrl })); // Ensure state is updated
       }
+      // Debug: log the payload
+      console.log('Submitting blog:', { ...formData, slug, featuredImage: featuredImageUrl });
       if (mode === 'add') {
         await blogApi.create({ ...formData, slug, featuredImage: featuredImageUrl });
         navigate('/blog');
