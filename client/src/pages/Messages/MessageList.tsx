@@ -9,23 +9,23 @@ const statusOptions = [
   { value: 'rejected', label: 'Rejected' },
 ];
 
-const QuoteList: React.FC = () => {
-  const [quotes, setQuotes] = useState<Quote[]>([]);
+const MessageList: React.FC = () => {
+  const [messages, setMessages] = useState<Quote[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [updatingId, setUpdatingId] = useState<string | null>(null);
 
   useEffect(() => {
-    fetchQuotes();
+    fetchMessages();
   }, []);
 
-  const fetchQuotes = async () => {
+  const fetchMessages = async () => {
     setLoading(true);
     try {
       const res = await quoteApi.getAll();
-      setQuotes(res.data);
+      setMessages(res.data);
     } catch (err) {
-      setError('Failed to load quotes.');
+      setError('Failed to load messages.');
     } finally {
       setLoading(false);
     }
@@ -35,7 +35,7 @@ const QuoteList: React.FC = () => {
     setUpdatingId(id);
     try {
       await quoteApi.update(id, { status });
-      setQuotes((prev) => prev.map(q => q._id === id ? { ...q, status } : q));
+      setMessages((prev) => prev.map(q => q._id === id ? { ...q, status } : q));
     } catch (err) {
       alert('Failed to update status.');
     } finally {
@@ -46,11 +46,11 @@ const QuoteList: React.FC = () => {
   return (
     <>
       <PageMeta
-        title="Quote Requests"
-        description="Manage customer quote requests and their status."
+        title="Message Requests"
+        description="Manage customer message requests and their status."
       />
       <div className="p-8">
-        <h1 className="text-2xl font-bold mb-6">Quote Requests</h1>
+        <h1 className="text-2xl font-bold mb-6">Message Requests</h1>
       {loading && <div>Loading...</div>}
       {error && <div className="text-red-600">{error}</div>}
       {!loading && !error && (
@@ -68,7 +68,7 @@ const QuoteList: React.FC = () => {
               </tr>
             </thead>
             <tbody>
-              {quotes.map((q) => (
+              {messages.map((q) => (
                 <tr key={q._id} className="border-t">
                   <td className="px-4 py-2 border font-medium">{q.name}</td>
                   <td className="px-4 py-2 border">{q.email}</td>
@@ -77,7 +77,7 @@ const QuoteList: React.FC = () => {
                   <td className="px-4 py-2 border">
                     {q.image ? (
                       <a href={q.image} target="_blank" rel="noopener noreferrer">
-                        <img src={q.image} alt="Quote" className="w-16 h-16 object-cover rounded shadow" />
+                        <img src={q.image} alt="Message" className="w-16 h-16 object-cover rounded shadow" />
                       </a>
                     ) : (
                       <span className="text-gray-400">No image</span>
@@ -107,4 +107,4 @@ const QuoteList: React.FC = () => {
   );
 };
 
-export default QuoteList; 
+export default MessageList; 

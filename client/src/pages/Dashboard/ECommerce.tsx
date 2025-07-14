@@ -49,7 +49,7 @@ export default function Ecommerce() {
         </div>
         <div className="bg-white dark:bg-gray-900 shadow rounded-xl p-6 flex flex-col items-center">
           <span className="text-4xl font-bold text-orange-600">{quotes.filter(q => q.status === 'pending').length}</span>
-          <span className="mt-2 text-lg font-semibold">Pending Quotes</span>
+          <span className="mt-2 text-lg font-semibold">Pending Messages</span>
         </div>
       </div>
       {loading ? (
@@ -113,11 +113,11 @@ export default function Ecommerce() {
               {services.length === 0 && <div className="col-span-3 text-gray-500">No services found.</div>}
             </div>
           </div>
-          {/* Quotes Row */}
+          {/* Messages Row */}
           <div className="mb-8">
             <div className="flex justify-between items-center mb-2">
-              <h2 className="text-xl font-bold">Recent Quotes</h2>
-              <Link to="/quotes" className="text-indigo-600 hover:underline">View All</Link>
+              <h2 className="text-xl font-bold">Recent Messages</h2>
+              <Link to="/messages" className="text-indigo-600 hover:underline">View All</Link>
             </div>
             <div className="overflow-x-auto">
               <table className="min-w-full border border-gray-200 rounded-lg">
@@ -141,7 +141,7 @@ export default function Ecommerce() {
                     </tr>
                   ))}
                   {quotes.length === 0 && (
-                    <tr><td colSpan={4} className="text-gray-500 text-center py-4">No quotes found.</td></tr>
+                    <tr><td colSpan={4} className="text-gray-500 text-center py-4">No messages found.</td></tr>
                   )}
                 </tbody>
               </table>
