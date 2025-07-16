@@ -1,0 +1,26 @@
+# Prevent directory listing
+Options -Indexes
+
+# Allow only specific routes
+RewriteEngine On
+
+# List of allowed routes (add or remove as needed)
+RewriteCond %{REQUEST_URI} ^/$ [OR]
+RewriteCond %{REQUEST_URI} ^/our-brands/?$ [OR]
+RewriteCond %{REQUEST_URI} ^/our-team/?$ [OR]
+RewriteCond %{REQUEST_URI} ^/company-profile/?$ [OR]
+RewriteCond %{REQUEST_URI} ^/sub-dealers/?$ [OR]
+RewriteCond %{REQUEST_URI} ^/contact/?$ [OR]
+RewriteCond %{REQUEST_URI} ^/get-quote/?$ [OR]
+RewriteCond %{REQUEST_URI} ^/blogs/?$ [OR]
+RewriteCond %{REQUEST_URI} ^/services/?$ [OR]
+RewriteCond %{REQUEST_URI} ^/products/?$ [OR]
+RewriteCond %{REQUEST_URI} ^/services/.*$ [OR]
+RewriteCond %{REQUEST_URI} ^/products/.*$ [OR]
+RewriteCond %{REQUEST_URI} ^/privacy/?$ [OR]
+RewriteCond %{REQUEST_URI} ^/terms/?$
+# If the request does not match any allowed route, return 404
+RewriteRule ^ - [L]
+
+# Deny all other requests
+RewriteRule ^ - [R=404,L] 
