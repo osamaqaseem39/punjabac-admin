@@ -49,6 +49,16 @@ const ServiceDetail: React.FC = () => {
             onClick={() => openModal(service.featuredImage!)}
           />
         )}
+        {service.benefits && service.benefits.length > 0 && (
+          <div className="mb-4">
+            <h2 className="text-xl font-semibold mb-2 text-gray-800 dark:text-gray-200">Benefits</h2>
+            <ul className="list-disc list-inside text-gray-700 dark:text-gray-300">
+              {service.benefits.map((benefit, idx) => (
+                <li key={idx}>{benefit}</li>
+              ))}
+            </ul>
+          </div>
+        )}
         <div className="flex gap-2 mt-4">
           <Link
             to="/services"

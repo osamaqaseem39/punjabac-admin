@@ -136,18 +136,21 @@ export interface Service {
   title: string;
   description: string;
   featuredImage?: string;
+  benefits?: string[];
 }
 
 export interface CreateServiceInput {
   title: string;
   description: string;
   featuredImage?: string;
+  benefits?: string[];
 }
 
 export interface UpdateServiceInput {
   title?: string;
   description?: string;
   featuredImage?: string;
+  benefits?: string[];
 }
 
 export const serviceApi = {

@@ -28,7 +28,8 @@ const ServiceForm: React.FC = () => {
   const [form, setForm] = useState<CreateServiceInput>({
     title: '',
     description: '',
-    featuredImage: ''
+    featuredImage: '',
+    benefits: []
   });
   const [featuredImageFile, setFeaturedImageFile] = useState<File | null>(null);
   const [previewFeatured, setPreviewFeatured] = useState<string | null>(null);
@@ -43,14 +44,15 @@ const ServiceForm: React.FC = () => {
           setForm({
             title: res.data.title,
             description: res.data.description,
-            featuredImage: res.data.featuredImage || ''
+            featuredImage: res.data.featuredImage || '',
+            benefits: res.data.benefits || []
           });
           setPreviewFeatured(res.data.featuredImage ? res.data.featuredImage : null);
         })
         .catch(() => setError('Failed to load service'))
         .finally(() => setLoading(false));
     } else {
-      setForm({ title: '', description: '', featuredImage: '' });
+      setForm({ title: '', description: '', featuredImage: '', benefits: [] });
       setFeaturedImageFile(null);
       setPreviewFeatured(null);
     }
@@ -58,6 +60,22 @@ const ServiceForm: React.FC = () => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleBenefitsChange = (index: number, value: string) => {
+    const newBenefits = [...(form.benefits || [])];
+    newBenefits[index] = value;
+    setForm({ ...form, benefits: newBenefits });
+  };
+
+  const handleAddBenefit = () => {
+    setForm({ ...form, benefits: [...(form.benefits || []), ''] });
+  };
+
+  const handleRemoveBenefit = (index: number) => {
+    const newBenefits = [...(form.benefits || [])];
+    newBenefits.splice(index, 1);
+    setForm({ ...form, benefits: newBenefits });
   };
 
   const handleFeaturedChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -87,7 +105,7 @@ const ServiceForm: React.FC = () => {
         await serviceApi.update(id, payload as UpdateServiceInput);
       } else {
         await serviceApi.create(payload);
-        setForm({ title: '', description: '', featuredImage: '' });
+        setForm({ title: '', description: '', featuredImage: '', benefits: [] });
         setFeaturedImageFile(null);
         setPreviewFeatured(null);
       }
@@ -125,6 +143,22 @@ const ServiceForm: React.FC = () => {
             rows={4}
             required
           />
+        </div>
+        <div>
+          <label className="block mb-1 font-semibold">Benefits</label>
+          {(form.benefits || []).map((benefit, idx) => (
+            <div key={idx} className="flex items-center gap-2 mb-2">
+              <input
+                type="text"
+                value={benefit}
+                onChange={e => handleBenefitsChange(idx, e.target.value)}
+                className="w-full border rounded px-3 py-2"
+                placeholder={`Benefit #${idx + 1}`}
+              />
+              <button type="button" onClick={() => handleRemoveBenefit(idx)} className="text-red-500 px-2 py-1">Remove</button>
+            </div>
+          ))}
+          <button type="button" onClick={handleAddBenefit} className="bg-green-100 text-green-700 px-3 py-1 rounded hover:bg-green-200 transition">Add Benefit</button>
         </div>
         <div>
           <label className="block mb-1 font-semibold">Featured Image</label>

@@ -51,6 +51,14 @@ const ServiceList: React.FC = () => {
                 )}
                 <h2 className="text-xl font-semibold mb-1 text-gray-800 dark:text-gray-200">{service.title}</h2>
                 <p className="text-sm text-gray-600 dark:text-gray-400 mb-2 line-clamp-2">{service.description}</p>
+                {service.benefits && service.benefits.length > 0 && (
+                  <ul className="text-xs text-gray-500 dark:text-gray-400 mb-2 list-disc list-inside">
+                    {service.benefits.slice(0, 3).map((benefit, idx) => (
+                      <li key={idx}>{benefit}</li>
+                    ))}
+                    {service.benefits.length > 3 && <li>and more...</li>}
+                  </ul>
+                )}
                 <div className="mt-auto flex gap-2">
                   <Link to={`/services/${service._id}`} className="px-3 py-1 bg-indigo-100 text-indigo-700 rounded hover:bg-indigo-200 transition">View</Link>
                   <Link to={`/services/${service._id}/edit`} className="px-3 py-1 bg-yellow-100 text-yellow-700 rounded hover:bg-yellow-200 transition">Edit</Link>
