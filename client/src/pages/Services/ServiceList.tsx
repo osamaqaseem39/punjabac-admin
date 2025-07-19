@@ -54,7 +54,7 @@ const ServiceList: React.FC = () => {
                 {service.benefits && service.benefits.length > 0 && (
                   <ul className="text-xs text-gray-500 dark:text-gray-400 mb-2 list-disc list-inside">
                     {service.benefits.slice(0, 3).map((benefit, idx) => (
-                      <li key={idx}>{benefit}</li>
+                      <li key={idx}>{typeof benefit === 'string' ? benefit : benefit.name + (benefit.description ? ` - ${benefit.description}` : '')}</li>
                     ))}
                     {service.benefits.length > 3 && <li>and more...</li>}
                   </ul>

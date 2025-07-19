@@ -54,7 +54,7 @@ const ServiceDetail: React.FC = () => {
             <h2 className="text-xl font-semibold mb-2 text-gray-800 dark:text-gray-200">Benefits</h2>
             <ul className="list-disc list-inside text-gray-700 dark:text-gray-300">
               {service.benefits.map((benefit, idx) => (
-                <li key={idx}>{benefit}</li>
+                <li key={idx}>{typeof benefit === 'string' ? benefit : benefit.name + (benefit.description ? ` - ${benefit.description}` : '')}</li>
               ))}
             </ul>
           </div>
