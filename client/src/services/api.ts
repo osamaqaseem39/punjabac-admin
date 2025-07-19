@@ -21,7 +21,6 @@ export interface Blog {
   updatedAt: string;
   featuredImage?: string;
 }
-
 export interface CreateBlogInput {
   title: string;
   content: string;
