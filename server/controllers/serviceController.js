@@ -29,7 +29,7 @@ exports.editService = async (req, res) => {
 // Get all services
 exports.getAllServices = async (req, res) => {
   try {
-    const services = await Service.find().sort({ createdAt: -1 });
+    const services = await Service.find().populate('benefits');
     res.json(services);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -40,6 +40,17 @@ exports.getAllServices = async (req, res) => {
 exports.getService = async (req, res) => {
   try {
     const service = await Service.findById(req.params.id);
+    if (!service) return res.status(404).json({ error: 'Service not found' });
+    res.json(service);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+// Get a single service by ID
+exports.getServiceById = async (req, res) => {
+  try {
+    const service = await Service.findById(req.params.id).populate('benefits');
     if (!service) return res.status(404).json({ error: 'Service not found' });
     res.json(service);
   } catch (err) {

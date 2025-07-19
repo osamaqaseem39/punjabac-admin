@@ -131,26 +131,50 @@ export const productApi = {
   delete: (id: string) => axios.delete(`${BASE_URL}/products/${id}`),
 }; 
 
+export interface Benefit {
+  _id: string;
+  name: string;
+  description?: string;
+}
+
+export interface CreateBenefitInput {
+  name: string;
+  description?: string;
+}
+
+export interface UpdateBenefitInput {
+  name?: string;
+  description?: string;
+}
+
+export const benefitApi = {
+  getAll: () => axios.get<Benefit[]>(`${BASE_URL}/benefits`),
+  getById: (id: string) => axios.get<Benefit>(`${BASE_URL}/benefits/${id}`),
+  create: (data: CreateBenefitInput) => axios.post<Benefit>(`${BASE_URL}/benefits`, data, { headers: { 'Content-Type': 'application/json' } }),
+  update: (id: string, data: UpdateBenefitInput) => axios.put<Benefit>(`${BASE_URL}/benefits/${id}`, data, { headers: { 'Content-Type': 'application/json' } }),
+  delete: (id: string) => axios.delete(`${BASE_URL}/benefits/${id}`),
+};
+
 export interface Service {
   _id: string;
   title: string;
   description: string;
   featuredImage?: string;
-  benefits?: string[];
+  benefits?: Benefit[]; // Populated
 }
 
 export interface CreateServiceInput {
   title: string;
   description: string;
   featuredImage?: string;
-  benefits?: string[];
+  benefits?: string[]; // Array of benefit IDs
 }
 
 export interface UpdateServiceInput {
   title?: string;
   description?: string;
   featuredImage?: string;
-  benefits?: string[];
+  benefits?: string[]; // Array of benefit IDs
 }
 
 export const serviceApi = {
@@ -174,8 +198,28 @@ export interface Quote {
   phone: string;
   details: string;
   image?: string;
+  subject: 'feedback' | 'query';
   status: string;
   createdAt: string;
+}
+
+export interface CreateQuoteInput {
+  name: string;
+  email: string;
+  phone: string;
+  details: string;
+  image?: string;
+  subject: 'feedback' | 'query';
+}
+
+export interface UpdateQuoteInput {
+  name?: string;
+  email?: string;
+  phone?: string;
+  details?: string;
+  image?: string;
+  subject?: 'feedback' | 'query';
+  status?: string;
 }
 
 export const quoteApi = {

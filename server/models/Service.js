@@ -15,7 +15,7 @@ const serviceSchema = new mongoose.Schema({
     default: null
   },
   benefits: {
-    type: [String],
+    type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Benefit' }],
     default: []
   }
 }, {

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import { serviceApi, Service, CreateServiceInput, UpdateServiceInput } from '../../services/api';
+import MultiSelect from '../../components/form/MultiSelect';
+import { benefitApi, Benefit } from '../../services/api';
 
 // Upload a file to cPanel server and return the public URL
 async function uploadToCpanel(file: File): Promise<string> {
@@ -29,14 +31,16 @@ const ServiceForm: React.FC = () => {
     title: '',
     description: '',
     featuredImage: '',
-    benefits: []
+    benefits: [] as string[]
   });
   const [featuredImageFile, setFeaturedImageFile] = useState<File | null>(null);
   const [previewFeatured, setPreviewFeatured] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [allBenefits, setAllBenefits] = useState<Benefit[]>([]);
 
   useEffect(() => {
+    benefitApi.getAll().then(res => setAllBenefits(res.data)).catch(() => setAllBenefits([]));
     if (isEdit && id) {
       setLoading(true);
       serviceApi.getById(id)
@@ -45,7 +49,9 @@ const ServiceForm: React.FC = () => {
             title: res.data.title,
             description: res.data.description,
             featuredImage: res.data.featuredImage || '',
-            benefits: res.data.benefits || []
+            benefits: Array.isArray(res.data.benefits)
+              ? res.data.benefits.map((b: any) => typeof b === 'string' ? b : b._id)
+              : []
           });
           setPreviewFeatured(res.data.featuredImage ? res.data.featuredImage : null);
         })
@@ -62,20 +68,10 @@ const ServiceForm: React.FC = () => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleBenefitsChange = (index: number, value: string) => {
-    const newBenefits = [...(form.benefits || [])];
-    newBenefits[index] = value;
-    setForm({ ...form, benefits: newBenefits });
-  };
-
-  const handleAddBenefit = () => {
-    setForm({ ...form, benefits: [...(form.benefits || []), ''] });
-  };
-
-  const handleRemoveBenefit = (index: number) => {
-    const newBenefits = [...(form.benefits || [])];
-    newBenefits.splice(index, 1);
-    setForm({ ...form, benefits: newBenefits });
+  // Remove old handleBenefitsChange, handleAddBenefit, handleRemoveBenefit
+  // Add new handler for multi-select
+  const handleBenefitsMultiSelect = (selected: string[]) => {
+    setForm({ ...form, benefits: selected });
   };
 
   const handleFeaturedChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -146,19 +142,12 @@ const ServiceForm: React.FC = () => {
         </div>
         <div>
           <label className="block mb-1 font-semibold">Benefits</label>
-          {(form.benefits || []).map((benefit, idx) => (
-            <div key={idx} className="flex items-center gap-2 mb-2">
-              <input
-                type="text"
-                value={benefit}
-                onChange={e => handleBenefitsChange(idx, e.target.value)}
-                className="w-full border rounded px-3 py-2"
-                placeholder={`Benefit #${idx + 1}`}
-              />
-              <button type="button" onClick={() => handleRemoveBenefit(idx)} className="text-red-500 px-2 py-1">Remove</button>
-            </div>
-          ))}
-          <button type="button" onClick={handleAddBenefit} className="bg-green-100 text-green-700 px-3 py-1 rounded hover:bg-green-200 transition">Add Benefit</button>
+          <MultiSelect
+            label="Select Benefits"
+            options={allBenefits.map(b => ({ value: b._id, text: `${b.name}${b.description ? ' - ' + b.description : ''}`, selected: (form.benefits || []).includes(b._id) ? true : false }))}
+            defaultSelected={form.benefits}
+            onChange={handleBenefitsMultiSelect}
+          />
         </div>
         <div>
           <label className="block mb-1 font-semibold">Featured Image</label>

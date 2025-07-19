@@ -12,28 +12,39 @@ const blogRoutes = require('./routes/blogs');
 const productRoutes = require('./routes/products');
 const serviceRoutes = require('./routes/services');
 const quotesRouter = require('./routes/quotes');
+const benefitsRoutes = require('./routes/benefits');
 
 // Load environment variables
 dotenv.config();
 
 const app = express();
 
+const allowedOrigins = [
+  'http://localhost:3001',
+  'http://localhost:3000',
+  'https://punjabac-admin-4nq8.vercel.app',
+  'https://punjabac.osamaqaseem.online',
+  'https://punjabac-admin.osamaqaseem.online',
+  'https://www.punjabac.com',
+  'https://punjabac.com'
+];
+
 // Middleware - CORS must be first!
+app.use(cors()); // Allow all origins
 app.use(cors({
-  origin: [
-    'http://localhost:3001', 
-    'http://localhost:3000',
-    'https://punjabac-admin-4nq8.vercel.app',
-    'https://punjabac.osamaqaseem.online',
-    
-    'https://punjabac-admin.osamaqaseem.online',
-    'https://www.punjabac.com'
-  ],
+  origin: function(origin, callback) {
+    if (!origin) return callback(null, true); // allow non-browser requests
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    } else {
+      return callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: [
-    'Content-Type', 
-    'Authorization', 
+    'Content-Type',
+    'Authorization',
     'x-auth-token',
     'Access-Control-Allow-Headers',
     'Access-Control-Allow-Origin',
@@ -42,8 +53,8 @@ app.use(cors({
     'X-Requested-With'
   ],
   exposedHeaders: [
-    'Content-Type', 
-    'Authorization', 
+    'Content-Type',
+    'Authorization',
     'x-auth-token'
   ],
   optionsSuccessStatus: 200
@@ -51,15 +62,6 @@ app.use(cors({
 
 // Also add a pre-flight middleware to ensure headers are set
 app.use((req, res, next) => {
-  const allowedOrigins = [
-    'http://localhost:3001', 
-    'http://localhost:3000',
-    'https://punjabac-admin-4nq8.vercel.app',
-    
-    'https://punjabac-admin.osamaqaseem.online',
-    'https://punjabac.osamaqaseem.online',
-    'https://www.punjabac.com'
-  ];
   const origin = req.headers.origin;
   if (allowedOrigins.includes(origin)) {
     res.header('Access-Control-Allow-Origin', origin);
@@ -87,7 +89,6 @@ app.use((req, res, next) => {
       name: mongoose.connection.name || 'unknown',
       port: mongoose.connection.port || 'unknown'
     });
-    
     return res.status(503).json({ 
       message: 'Database connection not ready',
       state: states[state] || 'unknown',
@@ -114,7 +115,7 @@ const connectDB = async () => {
   try {
     const mongoURI = process.env.MONGODB_URI;
     console.log('Attempting to connect to MongoDB...');
-    console.log('MongoDB URI:', mongoURI.replace(/\/\/[^:]+:[^@]+@/, '//****:****@')); // Hide credentials in logs
+    console.log('MongoDB URI:', mongoURI.replace(/\/\/[^:]+:[^@]+@/, '//****:****@'));
 
     const options = {
       useNewUrlParser: true,
@@ -179,6 +180,7 @@ app.use('/api/blogs', blogRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/services', serviceRoutes);
 app.use('/api/quotes', quotesRouter);
+app.use('/api/benefits', benefitsRoutes);
 app.use('/uploads/products', express.static(path.join(__dirname, '../uploads/products')));
 
 // Root route for API health check
