@@ -28,7 +28,7 @@ const BenefitForm: React.FC<BenefitFormProps> = ({ initial, onSubmit, onCancel, 
     <form onSubmit={handleSubmit} className="mb-6 space-y-4 bg-white p-4 rounded shadow">
       <input name="name" value={form.name} onChange={handleChange} placeholder="Name" required className="border p-2 rounded w-full" />
       <input name="description" value={form.description} onChange={handleChange} placeholder="Description" className="border p-2 rounded w-full" />
-      <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded">{submitLabel || 'Save Benefit'}</button>
+      <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded" disabled={loading}>{submitLabel || 'Save Benefit'}</button>
       {onCancel && <button type="button" onClick={onCancel} className="ml-2 text-gray-600">Cancel</button>}
     </form>
   );

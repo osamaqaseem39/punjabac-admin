@@ -1,9 +1,10 @@
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import BenefitForm from './BenefitForm';
 
 export default function BenefitEdit() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [initial, setInitial] = useState<{ name: string; description: string } | null>(null);
 
   useEffect(() => {
@@ -20,7 +21,7 @@ export default function BenefitEdit() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
     });
-    // Optionally redirect or show success
+    navigate('/services/benefits');
   };
 
   if (!initial) return <div>Loading...</div>;

@@ -29,7 +29,7 @@ const CategoryForm: React.FC<CategoryFormProps> = ({ initial, onSubmit, onCancel
       <input name="name" value={form.name} onChange={handleChange} placeholder="Name" required className="border p-2 rounded w-full" />
       <input name="image" value={form.image} onChange={handleChange} placeholder="Image URL" className="border p-2 rounded w-full" />
       <input name="description" value={form.description} onChange={handleChange} placeholder="Description" className="border p-2 rounded w-full" />
-      <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded">{submitLabel || 'Save Category'}</button>
+      <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded" disabled={loading}>{submitLabel || 'Save Category'}</button>
       {onCancel && <button type="button" onClick={onCancel} className="ml-2 text-gray-600">Cancel</button>}
     </form>
   );
