@@ -8,13 +8,17 @@ import {
   HorizontaLDots,
   DocsIcon,
   ChatIcon,
+  BoxIcon,
+  ListIcon,
+  GroupIcon,
+  CheckCircleIcon,
 } from "../icons";
 
 type NavItem = {
   name: string;
   icon: React.ReactNode;
   path?: string;
-  subItems?: { name: string; path: string; pro?: boolean; new?: boolean }[];
+  subItems?: { name: string; path: string; icon?: React.ReactNode; pro?: boolean; new?: boolean }[];
 };
 
 const navItems: NavItem[] = [
@@ -25,13 +29,12 @@ const navItems: NavItem[] = [
     path: "/blog",
   },
   {
-    icon: <DocsIcon />,
+    icon: <BoxIcon />,
     name: "Products",
     subItems: [
-      { name: "All Products", path: "/products" },
-      { name: "Add Product", path: "/products/add" },
-      { name: "Categories", path: "/categories" },
-      { name: "Brands", path: "/brands" },
+      { name: "Products", path: "/products" },
+      { name: "Categories", path: "/categories", icon: <ListIcon /> },
+      { name: "Brands", path: "/brands", icon: <GroupIcon /> },
     ],
   },
   {
@@ -39,7 +42,7 @@ const navItems: NavItem[] = [
     name: "Services",
     subItems: [
       { name: "All Services", path: "/services" },
-      { name: "Add Service", path: "/services/add" },
+      { name: "Benefits", path: "/benefits", icon: <CheckCircleIcon /> },
     ],
   },
   {
@@ -207,6 +210,7 @@ const AppSidebar: React.FC = () => {
                           : "menu-dropdown-item-inactive"
                       }`}
                     >
+                      {subItem.icon && <span className="mr-2 align-middle">{subItem.icon}</span>}
                       {subItem.name}
                       <span className="flex items-center gap-1 ml-auto">
                         {subItem.new && (
