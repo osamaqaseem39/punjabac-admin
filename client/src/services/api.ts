@@ -100,6 +100,9 @@ export interface Product {
   description: string;
   featuredImage?: string;
   gallery?: string[];
+  category?: string;
+  brand?: string;
+  featured?: boolean;
 }
 
 export interface CreateProductInput {
@@ -107,6 +110,9 @@ export interface CreateProductInput {
   description: string;
   featuredImage?: File;
   gallery?: File[];
+  category?: string;
+  brand?: string;
+  featured?: boolean;
 }
 
 export interface UpdateProductInput {
@@ -114,6 +120,9 @@ export interface UpdateProductInput {
   description?: string;
   featuredImage?: File;
   gallery?: File[];
+  category?: string;
+  brand?: string;
+  featured?: boolean;
 }
 
 export const productApi = {
@@ -160,6 +169,7 @@ export interface Service {
   description: string;
   featuredImage?: string;
   benefits?: Benefit[]; // Populated
+  tags?: string[];
 }
 
 export interface CreateServiceInput {
@@ -167,6 +177,7 @@ export interface CreateServiceInput {
   description: string;
   featuredImage?: string;
   benefits?: string[]; // Array of benefit IDs
+  tags?: string[];
 }
 
 export interface UpdateServiceInput {
@@ -174,6 +185,7 @@ export interface UpdateServiceInput {
   description?: string;
   featuredImage?: string;
   benefits?: string[]; // Array of benefit IDs
+  tags?: string[];
 }
 
 export const serviceApi = {

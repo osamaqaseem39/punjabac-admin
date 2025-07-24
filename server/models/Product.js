@@ -16,7 +16,21 @@ const productSchema = new mongoose.Schema({
   },
   gallery: [{
     type: String
-  }]
+  }],
+  category: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Category',
+    required: false
+  },
+  brand: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Brand',
+    required: false
+  },
+  featured: {
+    type: Boolean,
+    default: false
+  }
 }, {
   timestamps: true
 });

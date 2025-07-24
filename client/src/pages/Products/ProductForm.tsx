@@ -30,6 +30,10 @@ const ProductForm: React.FC = () => {
   const [previewGallery, setPreviewGallery] = useState<string[]>([]);
   const [existingGallery, setExistingGallery] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
+  const [categories, setCategories] = useState<any[]>([]);
+  const [brands, setBrands] = useState<any[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<string>('');
+  const [selectedBrand, setSelectedBrand] = useState<string>('');
 
   useEffect(() => {
     if (id) {
@@ -50,6 +54,13 @@ const ProductForm: React.FC = () => {
       setPreviewGallery([]);
       setExistingGallery([]);
     }
+    // Fetch categories and brands
+    fetch('http://localhost:3000/api/categories')
+      .then(res => res.json())
+      .then(setCategories);
+    fetch('http://localhost:3000/api/brands')
+      .then(res => res.json())
+      .then(setBrands);
   }, [id]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -69,6 +80,15 @@ const ProductForm: React.FC = () => {
       setGalleryFiles(files);
       setPreviewGallery(files.map(file => URL.createObjectURL(file)));
     }
+  };
+
+  const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedCategory(e.target.value);
+    setProduct({ ...product, category: e.target.value });
+  };
+  const handleBrandChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedBrand(e.target.value);
+    setProduct({ ...product, brand: e.target.value });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -200,6 +220,42 @@ const ProductForm: React.FC = () => {
               </div>
             ))}
           </div>
+        </div>
+        <div>
+          <label className="block font-semibold mb-1">Category</label>
+          <select name="category" value={product.category || ''} onChange={handleCategoryChange} className="w-full border px-3 py-2 rounded">
+            <option value="">Select Category</option>
+            {categories.map(cat => (
+              <option key={cat._id} value={cat._id}>{cat.name}</option>
+            ))}
+          </select>
+          {product.category && categories.find(cat => cat._id === product.category) && categories.find(cat => cat._id === product.category).image && (
+            <img src={categories.find(cat => cat._id === product.category).image} alt="Category" className="h-12 mt-2" />
+          )}
+        </div>
+        <div>
+          <label className="block font-semibold mb-1">Brand</label>
+          <select name="brand" value={product.brand || ''} onChange={handleBrandChange} className="w-full border px-3 py-2 rounded">
+            <option value="">Select Brand</option>
+            {brands.map(brand => (
+              <option key={brand._id} value={brand._id}>{brand.name}</option>
+            ))}
+          </select>
+          {product.brand && brands.find(brand => brand._id === product.brand) && brands.find(brand => brand._id === product.brand).image && (
+            <img src={brands.find(brand => brand._id === product.brand).image} alt="Brand" className="h-12 mt-2" />
+          )}
+        </div>
+        <div>
+          <label className="inline-flex items-center">
+            <input
+              type="checkbox"
+              name="featured"
+              checked={!!product.featured}
+              onChange={e => setProduct({ ...product, featured: e.target.checked })}
+              className="form-checkbox h-5 w-5 text-indigo-600"
+            />
+            <span className="ml-2">Featured Product</span>
+          </label>
         </div>
         <button type="submit" className="bg-indigo-600 text-white px-4 py-2 rounded" disabled={loading}>{loading ? 'Saving...' : 'Save Product'}</button>
       </form>

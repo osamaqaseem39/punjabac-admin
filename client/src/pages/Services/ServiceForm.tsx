@@ -31,7 +31,8 @@ const ServiceForm: React.FC = () => {
     title: '',
     description: '',
     featuredImage: '',
-    benefits: [] as string[]
+    benefits: [] as string[],
+    tags: [] as string[],
   });
   const [featuredImageFile, setFeaturedImageFile] = useState<File | null>(null);
   const [previewFeatured, setPreviewFeatured] = useState<string | null>(null);
@@ -51,14 +52,15 @@ const ServiceForm: React.FC = () => {
             featuredImage: res.data.featuredImage || '',
             benefits: Array.isArray(res.data.benefits)
               ? res.data.benefits.map((b: any) => typeof b === 'string' ? b : b._id)
-              : []
+              : [],
+            tags: Array.isArray(res.data.tags) ? res.data.tags : [],
           });
           setPreviewFeatured(res.data.featuredImage ? res.data.featuredImage : null);
         })
         .catch(() => setError('Failed to load service'))
         .finally(() => setLoading(false));
     } else {
-      setForm({ title: '', description: '', featuredImage: '', benefits: [] });
+      setForm({ title: '', description: '', featuredImage: '', benefits: [], tags: [] });
       setFeaturedImageFile(null);
       setPreviewFeatured(null);
     }
@@ -66,6 +68,11 @@ const ServiceForm: React.FC = () => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleTagsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const tagsArr = e.target.value.split(',').map(tag => tag.trim()).filter(Boolean);
+    setForm({ ...form, tags: tagsArr });
   };
 
   // Remove old handleBenefitsChange, handleAddBenefit, handleRemoveBenefit
@@ -101,7 +108,7 @@ const ServiceForm: React.FC = () => {
         await serviceApi.update(id, payload as UpdateServiceInput);
       } else {
         await serviceApi.create(payload);
-        setForm({ title: '', description: '', featuredImage: '', benefits: [] });
+        setForm({ title: '', description: '', featuredImage: '', benefits: [], tags: [] });
         setFeaturedImageFile(null);
         setPreviewFeatured(null);
       }
@@ -147,6 +154,17 @@ const ServiceForm: React.FC = () => {
             options={allBenefits.map(b => ({ value: b._id, text: `${b.name}${b.description ? ' - ' + b.description : ''}`, selected: (form.benefits || []).includes(b._id) ? true : false }))}
             defaultSelected={form.benefits}
             onChange={handleBenefitsMultiSelect}
+          />
+        </div>
+        <div>
+          <label className="block mb-1 font-semibold">Tags (comma separated)</label>
+          <input
+            type="text"
+            name="tags"
+            value={form.tags?.join(', ') || ''}
+            onChange={handleTagsChange}
+            className="w-full border rounded px-3 py-2"
+            placeholder="e.g. repair, installation, maintenance"
           />
         </div>
         <div>

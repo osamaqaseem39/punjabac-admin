@@ -3,8 +3,8 @@ const Service = require('../models/Service');
 // Add a new service
 exports.addService = async (req, res) => {
   try {
-    const { title, description, featuredImage, benefits } = req.body;
-    const service = new Service({ title, description, featuredImage, benefits });
+    const { title, description, featuredImage, benefits, tags } = req.body;
+    const service = new Service({ title, description, featuredImage, benefits, tags });
     await service.save();
     res.status(201).json(service);
   } catch (err) {
@@ -16,8 +16,8 @@ exports.addService = async (req, res) => {
 // Edit an existing service
 exports.editService = async (req, res) => {
   try {
-    const { title, description, featuredImage, benefits } = req.body;
-    const updateData = { title, description, featuredImage, benefits };
+    const { title, description, featuredImage, benefits, tags } = req.body;
+    const updateData = { title, description, featuredImage, benefits, tags };
     const service = await Service.findByIdAndUpdate(req.params.id, updateData, { new: true });
     if (!service) return res.status(404).json({ error: 'Service not found' });
     res.json(service);
