@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import BenefitForm from './BenefitForm';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3000/api/benefits';
 
@@ -10,8 +11,7 @@ interface Benefit {
 
 const BenefitsList = () => {
   const [benefits, setBenefits] = useState<Benefit[]>([]);
-  const [form, setForm] = useState<{ name: string; description: string }>({ name: '', description: '' });
-  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editing, setEditing] = useState<Benefit | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -30,35 +30,44 @@ const BenefitsList = () => {
 
   useEffect(() => { fetchBenefits(); }, []);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleAdd = async (data: { name: string; description: string }) => {
     setLoading(true);
     setError('');
     try {
-      const method = editingId ? 'PUT' : 'POST';
-      const url = editingId ? `${API_URL}/${editingId}` : API_URL;
-      await fetch(url, {
-        method,
+      await fetch(API_URL, {
+        method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
+        body: JSON.stringify(data),
       });
-      setForm({ name: '', description: '' });
-      setEditingId(null);
       fetchBenefits();
     } catch (err) {
-      setError('Failed to save benefit');
+      setError('Failed to add benefit');
     } finally {
       setLoading(false);
     }
   };
 
   const handleEdit = (benefit: Benefit) => {
-    setForm({ name: benefit.name, description: benefit.description || '' });
-    setEditingId(benefit._id);
+    setEditing(benefit);
+  };
+
+  const handleUpdate = async (data: { name: string; description: string }) => {
+    if (!editing) return;
+    setLoading(true);
+    setError('');
+    try {
+      await fetch(`${API_URL}/${editing._id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+      setEditing(null);
+      fetchBenefits();
+    } catch (err) {
+      setError('Failed to update benefit');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleDelete = async (id: string) => {
@@ -77,12 +86,17 @@ const BenefitsList = () => {
   return (
     <div className="max-w-3xl mx-auto py-8">
       <h1 className="text-2xl font-bold mb-4">Benefits</h1>
-      <form onSubmit={handleSubmit} className="mb-6 space-y-4 bg-white p-4 rounded shadow">
-        <input name="name" value={form.name} onChange={handleChange} placeholder="Name" required className="border p-2 rounded w-full" />
-        <input name="description" value={form.description} onChange={handleChange} placeholder="Description" className="border p-2 rounded w-full" />
-        <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded">{editingId ? 'Update' : 'Add'} Benefit</button>
-        {editingId && <button type="button" onClick={() => { setEditingId(null); setForm({ name: '', description: '' }); }} className="ml-2 text-gray-600">Cancel</button>}
-      </form>
+      {editing ? (
+        <BenefitForm
+          initial={{ name: editing.name, description: editing.description || '' }}
+          onSubmit={handleUpdate}
+          onCancel={() => setEditing(null)}
+          loading={loading}
+          submitLabel="Update Benefit"
+        />
+      ) : (
+        <BenefitForm onSubmit={handleAdd} loading={loading} submitLabel="Add Benefit" />
+      )}
       {error && <div className="text-red-600 mb-2">{error}</div>}
       <table className="w-full bg-white rounded shadow">
         <thead>

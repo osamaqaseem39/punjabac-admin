@@ -1,4 +1,7 @@
 import React, { useEffect, useState } from 'react';
+import CategoryForm from './CategoryForm';
+
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3000/api/categories';
 
 interface Category {
   _id: string;
@@ -7,12 +10,9 @@ interface Category {
   description?: string;
 }
 
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3000/api/categories';
-
 const CategoryList = () => {
   const [categories, setCategories] = useState<Category[]>([]);
-  const [form, setForm] = useState<{ name: string; image: string; description: string }>({ name: '', image: '', description: '' });
-  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editing, setEditing] = useState<Category | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -31,35 +31,44 @@ const CategoryList = () => {
 
   useEffect(() => { fetchCategories(); }, []);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleAdd = async (data: { name: string; image: string; description: string }) => {
     setLoading(true);
     setError('');
     try {
-      const method = editingId ? 'PUT' : 'POST';
-      const url = editingId ? `${API_URL}/${editingId}` : API_URL;
-      await fetch(url, {
-        method,
+      await fetch(API_URL, {
+        method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
+        body: JSON.stringify(data),
       });
-      setForm({ name: '', image: '', description: '' });
-      setEditingId(null);
       fetchCategories();
     } catch (err) {
-      setError('Failed to save category');
+      setError('Failed to add category');
     } finally {
       setLoading(false);
     }
   };
 
   const handleEdit = (cat: Category) => {
-    setForm({ name: cat.name, image: cat.image || '', description: cat.description || '' });
-    setEditingId(cat._id);
+    setEditing(cat);
+  };
+
+  const handleUpdate = async (data: { name: string; image: string; description: string }) => {
+    if (!editing) return;
+    setLoading(true);
+    setError('');
+    try {
+      await fetch(`${API_URL}/${editing._id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+      setEditing(null);
+      fetchCategories();
+    } catch (err) {
+      setError('Failed to update category');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleDelete = async (id: string) => {
@@ -78,13 +87,17 @@ const CategoryList = () => {
   return (
     <div className="max-w-3xl mx-auto py-8">
       <h1 className="text-2xl font-bold mb-4">Categories</h1>
-      <form onSubmit={handleSubmit} className="mb-6 space-y-4 bg-white p-4 rounded shadow">
-        <input name="name" value={form.name} onChange={handleChange} placeholder="Name" required className="border p-2 rounded w-full" />
-        <input name="image" value={form.image} onChange={handleChange} placeholder="Image URL" className="border p-2 rounded w-full" />
-        <input name="description" value={form.description} onChange={handleChange} placeholder="Description" className="border p-2 rounded w-full" />
-        <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded">{editingId ? 'Update' : 'Add'} Category</button>
-        {editingId && <button type="button" onClick={() => { setEditingId(null); setForm({ name: '', image: '', description: '' }); }} className="ml-2 text-gray-600">Cancel</button>}
-      </form>
+      {editing ? (
+        <CategoryForm
+          initial={{ name: editing.name, image: editing.image || '', description: editing.description || '' }}
+          onSubmit={handleUpdate}
+          onCancel={() => setEditing(null)}
+          loading={loading}
+          submitLabel="Update Category"
+        />
+      ) : (
+        <CategoryForm onSubmit={handleAdd} loading={loading} submitLabel="Add Category" />
+      )}
       {error && <div className="text-red-600 mb-2">{error}</div>}
       <table className="w-full bg-white rounded shadow">
         <thead>
@@ -96,7 +109,7 @@ const CategoryList = () => {
           </tr>
         </thead>
         <tbody>
-          {categories.map((cat) => (
+          {categories.map(cat => (
             <tr key={cat._id}>
               <td className="p-2 text-center">{cat.image && <img src={cat.image} alt={cat.name} className="h-10 inline" />}</td>
               <td className="p-2">{cat.name}</td>

@@ -32,9 +32,9 @@ const navItems: NavItem[] = [
     icon: <BoxIcon />,
     name: "Products",
     subItems: [
-      { name: "Products", path: "/products" },
+      { name: "Products", path: "/products" , icon: <BoxIcon />},
       { name: "Categories", path: "/categories", icon: <ListIcon /> },
-      { name: "Brands", path: "/brands", icon: <GroupIcon /> },
+      { name: "Brands", path: "/brands", icon: <ChevronDownIcon /> },
     ],
   },
   {
