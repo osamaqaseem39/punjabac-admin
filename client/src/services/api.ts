@@ -94,6 +94,17 @@ export const authApi = {
     }),
 }; 
 
+export interface AutoCompany {
+  _id: string;
+  name: string;
+  image?: string;
+}
+
+export const autoCompanyApi = {
+  getAll: () => axios.get<AutoCompany[]>(`${BASE_URL}/autoCompanies`),
+  getById: (id: string) => axios.get<AutoCompany>(`${BASE_URL}/autoCompanies/${id}`),
+};
+
 export interface Product {
   _id: string;
   title: string;
@@ -103,6 +114,7 @@ export interface Product {
   category?: string;
   brand?: string;
   featured?: boolean;
+  autoCompanies?: string[];
 }
 
 export interface CreateProductInput {
@@ -113,6 +125,7 @@ export interface CreateProductInput {
   category?: string;
   brand?: string;
   featured?: boolean;
+  autoCompanies?: string[];
 }
 
 export interface UpdateProductInput {
@@ -123,6 +136,7 @@ export interface UpdateProductInput {
   category?: string;
   brand?: string;
   featured?: boolean;
+  autoCompanies?: string[];
 }
 
 export const productApi = {

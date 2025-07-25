@@ -22,7 +22,6 @@ type NavItem = {
 };
 
 const navItems: NavItem[] = [
-  
   {
     icon: <DocsIcon />,
     name: "Blog",
@@ -31,19 +30,32 @@ const navItems: NavItem[] = [
   {
     icon: <BoxIcon />,
     name: "Products",
-    subItems: [
-      { name: "Products", path: "/products" , icon: <BoxIcon />},
-      { name: "Categories", path: "/categories", icon: <ListIcon /> },
-      { name: "Brands", path: "/brands", icon: <ChevronDownIcon /> },
-    ],
+    path: "/products",
+  },
+  {
+    icon: <ListIcon />,
+    name: "Categories",
+    path: "/categories",
+  },
+  {
+    icon: <GroupIcon />,
+    name: "Brands",
+    path: "/brands",
+  },
+  {
+    icon: <CheckCircleIcon />,
+    name: "Benefits",
+    path: "/benefits",
+  },
+  {
+    icon: <GroupIcon />,
+    name: "Auto Companies",
+    path: "/auto-companies",
   },
   {
     icon: <DocsIcon />,
     name: "Services",
-    subItems: [
-      { name: "All Services", path: "/services" },
-      { name: "Benefits", path: "/benefits", icon: <CheckCircleIcon /> },
-    ],
+    path: "/services",
   },
   {
     icon: <ChatIcon />,

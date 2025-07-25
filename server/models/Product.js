@@ -30,7 +30,12 @@ const productSchema = new mongoose.Schema({
   featured: {
     type: Boolean,
     default: false
-  }
+  },
+  autoCompanies: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'AutoCompany',
+    required: false
+  }]
 }, {
   timestamps: true
 });

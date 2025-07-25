@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import { productApi, Product } from '../../services/api';
+import { autoCompanyApi, AutoCompany, categoryApi, brandApi } from '../../services/api';
 
 // Upload a file to cPanel server and return the public URL
 async function uploadToCpanel(file: File): Promise<string> {
@@ -34,6 +35,8 @@ const ProductForm: React.FC = () => {
   const [brands, setBrands] = useState<any[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [selectedBrand, setSelectedBrand] = useState<string>('');
+  const [autoCompanies, setAutoCompanies] = useState<AutoCompany[]>([]);
+  const [selectedAutoCompanies, setSelectedAutoCompanies] = useState<string[]>([]);
 
   useEffect(() => {
     if (id) {
@@ -54,14 +57,18 @@ const ProductForm: React.FC = () => {
       setPreviewGallery([]);
       setExistingGallery([]);
     }
-    // Fetch categories and brands
-    fetch('http://localhost:3000/api/categories')
-      .then(res => res.json())
-      .then(setCategories);
-    fetch('http://localhost:3000/api/brands')
-      .then(res => res.json())
-      .then(setBrands);
+    // Fetch categories and brands using API methods
+    categoryApi.getAll().then(res => setCategories(res.data));
+    brandApi.getAll().then(res => setBrands(res.data));
+    // Fetch auto companies
+    autoCompanyApi.getAll().then(res => setAutoCompanies(res.data));
   }, [id]);
+
+  useEffect(() => {
+    if (product.autoCompanies) {
+      setSelectedAutoCompanies(product.autoCompanies as string[]);
+    }
+  }, [product.autoCompanies]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setProduct({ ...product, [e.target.name]: e.target.value });
@@ -91,6 +98,21 @@ const ProductForm: React.FC = () => {
     setProduct({ ...product, brand: e.target.value });
   };
 
+  // Remove handleAutoCompaniesChange and add handleAutoCompanyCheckbox
+  const handleAutoCompanyCheckbox = (id: string) => {
+    setSelectedAutoCompanies((prev) =>
+      prev.includes(id)
+        ? prev.filter((cid) => cid !== id)
+        : [...prev, id]
+    );
+    setProduct((prev) => ({
+      ...prev,
+      autoCompanies: prev.autoCompanies && prev.autoCompanies.includes(id)
+        ? prev.autoCompanies.filter((cid: string) => cid !== id)
+        : [...(prev.autoCompanies || []), id],
+    }));
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -113,6 +135,7 @@ const ProductForm: React.FC = () => {
         ...product,
         featuredImage: featuredImageUrl || '',
         gallery: galleryUrls.length > 0 ? galleryUrls : [],
+        autoCompanies: selectedAutoCompanies,
       };
       // Debug log
       console.log('Submitting product:', payload);
@@ -136,7 +159,7 @@ const ProductForm: React.FC = () => {
   };
 
   return (
-    <div className="max-w-xl mx-auto p-4">
+    <div className="w-full mx-auto p-4">
       <Link to="/products" className="inline-block mb-2 px-4 py-1 bg-indigo-100 text-indigo-700 rounded hover:bg-indigo-200 transition">← Back</Link>
       <h1 className="text-2xl font-bold mb-4">{id ? 'Edit' : 'Add'} Product</h1>
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -244,6 +267,23 @@ const ProductForm: React.FC = () => {
           {product.brand && brands.find(brand => brand._id === product.brand) && brands.find(brand => brand._id === product.brand).image && (
             <img src={brands.find(brand => brand._id === product.brand).image} alt="Brand" className="h-12 mt-2" />
           )}
+        </div>
+        <div>
+          <label className="block font-semibold mb-1">Auto Companies</label>
+          <div className="flex flex-wrap gap-4">
+            {autoCompanies.map(company => (
+              <label key={company._id} className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  value={company._id}
+                  checked={selectedAutoCompanies.includes(company._id)}
+                  onChange={() => handleAutoCompanyCheckbox(company._id)}
+                  className="form-checkbox h-5 w-5 text-indigo-600"
+                />
+                {company.name}
+              </label>
+            ))}
+          </div>
         </div>
         <div>
           <label className="inline-flex items-center">
