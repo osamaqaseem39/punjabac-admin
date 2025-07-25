@@ -19,10 +19,14 @@ import ServiceForm from './pages/Services/ServiceForm';
 import ServiceDetail from './pages/Services/ServiceDetail';
 import MessageList from "./pages/Messages/MessageList";
 import CategoryList from "./pages/Category/CategoryList";
+import CategoryForm from "./pages/Category/CategoryForm";
+import CategoryDetail from "./pages/Category/CategoryDetail";
 import BrandList from "./pages/Brand/BrandList";
 import BrandForm from "./pages/Brand/BrandForm";
 import BenefitList from "./pages/Benefits/BenefitList";
 import BenefitDetail from "./pages/Benefits/BenefitDetail";
+import BenefitForm from "./pages/Benefits/BenefitForm";
+import BrandDetail from "./pages/Brand/BrandDetail";
 
 
 
@@ -57,10 +61,23 @@ export default function App() {
             <Route path="/products/:id/edit" element={<ProductForm />} />
 
             {/* Category Routes */}
-            <Route path="/products/categories" element={<CategoryList />} />
+            <Route path="/categories" element={<CategoryList />} />
+            <Route path="/categories/add" element={<CategoryForm />} />
+            <Route path="/categories/:id" element={<CategoryDetail />} />
+            <Route path="/categories/:id/edit" element={<CategoryForm />} />
+
 
             {/* Brand Routes */}
-            <Route path="/products/brands" element={<BrandList />} />
+            <Route path="/brands" element={<BrandList />} />
+            <Route path="/brands/add" element={<BrandForm />} />
+            <Route path="/brands/:id" element={<BrandDetail />} />
+            <Route path="/brands/:id/edit" element={<BrandForm />} />
+
+
+            <Route path="/benefits" element={<BenefitList />} />
+            <Route path="/benefits/add" element={<BenefitForm />} />
+            <Route path="/benefits/:id" element={<BenefitDetail />} />
+            <Route path="/benefits/:id/edit" element={<BenefitForm />} />
 
             {/* Services Routes */}
             <Route path="/services" element={<ServiceList />} />
