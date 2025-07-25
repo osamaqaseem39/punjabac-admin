@@ -18,15 +18,14 @@ import ServiceList from './pages/Services/ServiceList';
 import ServiceForm from './pages/Services/ServiceForm';
 import ServiceDetail from './pages/Services/ServiceDetail';
 import MessageList from "./pages/Messages/MessageList";
-import BenefitsList from "./pages/Services/BenefitsList";
-import CategoryList from "./pages/Products/CategoryList";
-import BrandList from "./pages/Products/BrandList";
-import CategoryAdd from './pages/Products/CategoryAdd';
-import CategoryEdit from './pages/Products/CategoryEdit';
-import BrandAdd from './pages/Products/BrandAdd';
-import BrandEdit from './pages/Products/BrandEdit';
-import BenefitAdd from './pages/Services/BenefitAdd';
-import BenefitEdit from './pages/Services/BenefitEdit';
+import CategoryList from "./pages/Category/CategoryList";
+import BrandList from "./pages/Brand/BrandList";
+import BrandForm from "./pages/Brand/BrandForm";
+import BenefitList from "./pages/Benefits/BenefitList";
+import BenefitDetail from "./pages/Benefits/BenefitDetail";
+
+
+
 
 
 export default function App() {
@@ -59,13 +58,9 @@ export default function App() {
 
             {/* Category Routes */}
             <Route path="/products/categories" element={<CategoryList />} />
-            <Route path="/products/categories/add" element={<CategoryAdd />} />
-            <Route path="/products/categories/:id/edit" element={<CategoryEdit />} />
 
             {/* Brand Routes */}
             <Route path="/products/brands" element={<BrandList />} />
-            <Route path="/products/brands/add" element={<BrandAdd />} />
-            <Route path="/products/brands/:id/edit" element={<BrandEdit />} />
 
             {/* Services Routes */}
             <Route path="/services" element={<ServiceList />} />
@@ -73,9 +68,6 @@ export default function App() {
             <Route path="/services/:id" element={<ServiceDetail />} />
             <Route path="/services/:id/edit" element={<ServiceForm />} />
             {/* Benefits Routes */}
-            <Route path="/services/benefits" element={<BenefitsList />} />
-            <Route path="/services/benefits/add" element={<BenefitAdd />} />
-            <Route path="/services/benefits/:id/edit" element={<BenefitEdit />} />
 
             <Route path="/messages" element={<MessageList/>}/>
           </Route>

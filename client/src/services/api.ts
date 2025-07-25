@@ -242,3 +242,57 @@ export const quoteApi = {
     }),
   delete: (id: string) => axios.delete(`${BASE_URL}/quotes/${id}`),
 };
+
+export interface Category {
+  _id: string;
+  name: string;
+  description?: string;
+  image?: string;
+}
+
+export interface CreateCategoryInput {
+  name: string;
+  description?: string;
+  image?: string;
+}
+
+export interface UpdateCategoryInput {
+  name?: string;
+  description?: string;
+  image?: string;
+}
+
+export const categoryApi = {
+  getAll: () => axios.get<Category[]>(`${BASE_URL}/categories`),
+  getById: (id: string) => axios.get<Category>(`${BASE_URL}/categories/${id}`),
+  create: (data: CreateCategoryInput) => axios.post<Category>(`${BASE_URL}/categories`, data, { headers: { 'Content-Type': 'application/json' } }),
+  update: (id: string, data: UpdateCategoryInput) => axios.put<Category>(`${BASE_URL}/categories/${id}`, data, { headers: { 'Content-Type': 'application/json' } }),
+  delete: (id: string) => axios.delete(`${BASE_URL}/categories/${id}`),
+};
+
+export interface Brand {
+  _id: string;
+  name: string;
+  description?: string;
+  image?: string;
+}
+
+export interface CreateBrandInput {
+  name: string;
+  description?: string;
+  image?: string;
+}
+
+export interface UpdateBrandInput {
+  name?: string;
+  description?: string;
+  image?: string;
+}
+
+export const brandApi = {
+  getAll: () => axios.get<Brand[]>(`${BASE_URL}/brands`),
+  getById: (id: string) => axios.get<Brand>(`${BASE_URL}/brands/${id}`),
+  create: (data: CreateBrandInput) => axios.post<Brand>(`${BASE_URL}/brands`, data, { headers: { 'Content-Type': 'application/json' } }),
+  update: (id: string, data: UpdateBrandInput) => axios.put<Brand>(`${BASE_URL}/brands/${id}`, data, { headers: { 'Content-Type': 'application/json' } }),
+  delete: (id: string) => axios.delete(`${BASE_URL}/brands/${id}`),
+};
