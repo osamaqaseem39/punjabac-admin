@@ -27,6 +27,9 @@ import BenefitList from "./pages/Benefits/BenefitList";
 import BenefitDetail from "./pages/Benefits/BenefitDetail";
 import BenefitForm from "./pages/Benefits/BenefitForm";
 import BrandDetail from "./pages/Brand/BrandDetail";
+import AutoCompanyList from "./pages/AutoCompany/AutoCompanyList";
+import AutoCompanyForm from "./pages/AutoCompany/AutoCompanyForm";
+import AutoCompanyDetail from "./pages/AutoCompany/AutoCompanyDetail";
 
 
 
@@ -84,7 +87,16 @@ export default function App() {
             <Route path="/services/add" element={<ServiceForm />} />
             <Route path="/services/:id" element={<ServiceDetail />} />
             <Route path="/services/:id/edit" element={<ServiceForm />} />
+
+            {/* Auto Company Routes */}
+            <Route path="/auto-companies" element={<AutoCompanyList />} />
+            <Route path="/auto-companies/add" element={<AutoCompanyForm />} />
+            <Route path="/auto-companies/:id" element={<AutoCompanyDetail />} />
+            <Route path="/auto-companies/:id/edit" element={<AutoCompanyForm />} />
+
+
             {/* Benefits Routes */}
+
 
             <Route path="/messages" element={<MessageList/>}/>
           </Route>
