@@ -48,13 +48,13 @@ const AutoCompanyDetail: React.FC = () => {
         </div>
         <div className="flex gap-2">
           <Link
-            to="/autocompanies"
+            to="/auto-companies"
             className="inline-block px-5 py-2 bg-indigo-600 text-white rounded-lg shadow hover:bg-indigo-700 transition"
           >
             Back to Auto Companies
           </Link>
           <Link
-            to={`/autocompanies/${company._id}/edit`}
+            to={`/auto-companies/${company._id}/edit`}
             className="inline-block px-5 py-2 bg-yellow-600 text-white rounded-lg shadow hover:bg-yellow-700 transition"
           >
             Edit

@@ -81,7 +81,7 @@ const AutoCompanyForm: React.FC<AutoCompanyFormProps> = ({ mode }) => {
         setImageFile(null);
         setPreviewImage(null);
       }
-      navigate('/autocompanies');
+      navigate('/auto-companies');
     } catch (err) {
       alert('Error saving auto company');
     } finally {
@@ -91,7 +91,7 @@ const AutoCompanyForm: React.FC<AutoCompanyFormProps> = ({ mode }) => {
 
   return (
     <div className="max-w-xl mx-auto p-4">
-      <Link to="/autocompanies" className="inline-block mb-2 px-4 py-1 bg-indigo-100 text-indigo-700 rounded hover:bg-indigo-200 transition">← Back</Link>
+      <Link to="/auto-companies" className="inline-block mb-2 px-4 py-1 bg-indigo-100 text-indigo-700 rounded hover:bg-indigo-200 transition">← Back</Link>
       <h1 className="text-2xl font-bold mb-4">{isEdit ? 'Edit' : 'Add'} Auto Company</h1>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
