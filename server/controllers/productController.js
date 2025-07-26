@@ -29,10 +29,7 @@ exports.editProduct = async (req, res) => {
 // Get all products
 exports.getAllProducts = async (req, res) => {
   try {
-    const filter = {};
-    if (req.query.category) filter.category = req.query.category;
-    if (req.query.brand) filter.brand = req.query.brand;
-    const products = await Product.find(filter).sort({ createdAt: -1 }).populate('category').populate('brand');
+    const products = await Product.find().sort({ createdAt: -1 }).populate('category').populate('brand');
     res.json(products);
   } catch (err) {
     res.status(500).json({ error: err.message });
