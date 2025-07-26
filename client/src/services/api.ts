@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const BASE_URL = process.env.NODE_ENV === 'development' 
-  ? 'https://punjabac-admim.vercel.app/api' 
+  ? 'https://punjabac-admin.vercel.app' 
   : 'https://punjabac-admin.vercel.app/api';
 
 // Add auth token to requests if it exists

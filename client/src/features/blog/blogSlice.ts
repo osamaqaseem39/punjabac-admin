@@ -27,7 +27,7 @@ const initialState: BlogState = {
 
 export const fetchBlogs = createAsyncThunk('blogs/fetchAll', async (_, { rejectWithValue }) => {
   try {
-    const response = await axios.get('https://punjabac-admim.vercel.app/api/blogs');
+    const response = await axios.get('https://punjabac-admin.vercel.app/blogs');
     return response.data;
   } catch (error: any) {
     return rejectWithValue(error.response.data.message);
@@ -38,7 +38,7 @@ export const fetchBlogById = createAsyncThunk(
   'blogs/fetchById',
   async (_id: string, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`https://punjabac-admim.vercel.app/api/blogs/id/${_id}`);
+      const response = await axios.get(`https://punjabac-admin.vercel.app/blogs/id/${_id}`);
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response.data.message);
@@ -50,7 +50,7 @@ export const fetchBlogBySlug = createAsyncThunk(
   'blogs/fetchBySlug',
   async (slug: string, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`https://punjabac-admim.vercel.app/api/blogs/${slug}`);
+      const response = await axios.get(`https://punjabac-admin.vercel.app/blogs/${slug}`);
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response.data.message);
@@ -63,7 +63,7 @@ export const createBlog = createAsyncThunk(
   async (blogData: Omit<Blog, '_id' | 'slug'>, { rejectWithValue, getState }: any) => {
     try {
       const token = getState().auth.token;
-      const response = await axios.post('https://punjabac-admim.vercel.app/api/blogs', blogData, {
+      const response = await axios.post('https://punjabac-admin.vercel.app/blogs', blogData, {
         headers: { 'x-auth-token': token },
       });
       return response.data;
@@ -81,7 +81,7 @@ export const updateBlog = createAsyncThunk(
   ) => {
     try {
       const token = getState().auth.token;
-      const response = await axios.put(`https://punjabac-admim.vercel.app/api/blogs/${_id}`, blogData, {
+      const response = await axios.put(`https://punjabac-admin.vercel.app/blogs/${_id}`, blogData, {
         headers: { 'x-auth-token': token },
       });
       return response.data;
@@ -96,7 +96,7 @@ export const deleteBlog = createAsyncThunk(
   async (_id: string, { rejectWithValue, getState }: any) => {
     try {
       const token = getState().auth.token;
-      await axios.delete(`https://punjabac-admim.vercel.app/api/blogs/${_id}`, {
+      await axios.delete(`https://punjabac-admin.vercel.app/blogs/${_id}`, {
         headers: { 'x-auth-token': token },
       });
       return _id;
