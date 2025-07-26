@@ -2,10 +2,10 @@ const express = require('express');
 const router = express.Router();
 const benefitController = require('../controllers/benefitController');
 
-router.get('/', benefitController.getAll);
-router.get('/:id', benefitController.getById);
-router.post('/', benefitController.create);
-router.put('/:id', benefitController.update);
-router.delete('/:id', benefitController.remove);
+router.get('/', benefitController.getBenefits);
+router.get('/:id', benefitController.getBenefitById);
+router.post('/', benefitController.createBenefit);
+router.put('/:id', benefitController.updateBenefit);
+router.delete('/:id', benefitController.deleteBenefit);
 
 module.exports = router; 
