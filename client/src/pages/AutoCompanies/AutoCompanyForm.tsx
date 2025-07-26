@@ -1,12 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
-
-// Placeholder for API (to be replaced with real API calls)
-const autoCompanyApi = {
-  getById: async (id: string) => ({ name: '', image: '' }),
-  create: async (data: any) => {},
-  update: async (id: string, data: any) => {},
-};
+import { autoCompanyApi } from '../../services/api';
 
 async function uploadToCpanel(file: File): Promise<string> {
   const formData = new FormData();
@@ -44,9 +38,9 @@ const AutoCompanyForm: React.FC<AutoCompanyFormProps> = ({ mode }) => {
     if (isEdit && id) {
       setLoading(true);
       autoCompanyApi.getById(id)
-        .then((data) => {
-          setCompany(data);
-          setPreviewImage(data.image ? data.image : null);
+        .then((response) => {
+          setCompany(response.data);
+          setPreviewImage(response.data.image ? response.data.image : null);
         })
         .finally(() => setLoading(false));
     } else {

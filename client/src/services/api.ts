@@ -1,6 +1,8 @@
 import axios from 'axios';
 
-const BASE_URL = 'https://punjabac-admin.vercel.app/api';
+const BASE_URL = process.env.NODE_ENV === 'development' 
+  ? 'http://localhost:3000/api' 
+  : 'https://punjabac-admin.vercel.app/api';
 
 // Add auth token to requests if it exists
 axios.interceptors.request.use((config) => {
@@ -100,9 +102,22 @@ export interface AutoCompany {
   image?: string;
 }
 
+export interface CreateAutoCompanyInput {
+  name: string;
+  image?: string;
+}
+
+export interface UpdateAutoCompanyInput {
+  name?: string;
+  image?: string;
+}
+
 export const autoCompanyApi = {
   getAll: () => axios.get<AutoCompany[]>(`${BASE_URL}/autoCompanies`),
   getById: (id: string) => axios.get<AutoCompany>(`${BASE_URL}/autoCompanies/${id}`),
+  create: (data: CreateAutoCompanyInput) => axios.post<AutoCompany>(`${BASE_URL}/autoCompanies`, data, { headers: { 'Content-Type': 'application/json' } }),
+  update: (id: string, data: UpdateAutoCompanyInput) => axios.put<AutoCompany>(`${BASE_URL}/autoCompanies/${id}`, data, { headers: { 'Content-Type': 'application/json' } }),
+  delete: (id: string) => axios.delete(`${BASE_URL}/autoCompanies/${id}`),
 };
 
 export interface Product {
