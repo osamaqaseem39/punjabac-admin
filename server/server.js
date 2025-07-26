@@ -30,7 +30,11 @@ const allowedOrigins = [
   'https://punjabac.osamaqaseem.online',
   'https://punjabac-admin.osamaqaseem.online',
   'https://www.punjabac.com',
-  'https://punjabac.com'
+  'https://punjabac.com',
+  // Allow all subpages for these domains
+  /^https:\/\/(.*\.)?punjabac\.com$/,
+  /^https:\/\/(.*\.)?osamaqaseem\.online$/,
+  /^https:\/\/(.*\.)?vercel\.app$/,
 ];
 
 // Middleware - CORS must be first!
