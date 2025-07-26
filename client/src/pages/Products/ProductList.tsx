@@ -14,17 +14,17 @@ const ProductList: React.FC = () => {
   const [filterBrand, setFilterBrand] = useState('');
 
   useEffect(() => {
-    fetch('http://localhost:3000/api/categories')
+    fetch('https://punjabac-admim.vercel.app/api/categories')
       .then(res => res.json())
       .then(setCategories);
-    fetch('http://localhost:3000/api/brands')
+    fetch('https://punjabac-admim.vercel.app/api/brands')
       .then(res => res.json())
       .then(setBrands);
   }, []);
 
   useEffect(() => {
     setLoading(true);
-    let url = 'http://localhost:3000/api/products';
+    let url = 'https://punjabac-admim.vercel.app/api/products';
     const params = [];
     if (filterCategory) params.push(`category=${filterCategory}`);
     if (filterBrand) params.push(`brand=${filterBrand}`);

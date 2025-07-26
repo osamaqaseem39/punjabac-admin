@@ -17,7 +17,7 @@ const options = {
         description: 'Production Server',
       },
       {
-        url: 'http://localhost:3000',
+        url: 'https://punjabac-admim.vercel.app',
         description: 'Development Server',
       },
     ],

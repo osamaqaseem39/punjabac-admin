@@ -194,7 +194,7 @@
   "variable": [
     {
       "key": "base_url",
-      "value": "http://localhost:3000",
+      "value": "https://punjabac-admim.vercel.app",
       "type": "string"
     },
     {
