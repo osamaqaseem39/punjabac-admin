@@ -3,8 +3,8 @@ const Product = require('../models/Product');
 // Add a new product
 exports.addProduct = async (req, res) => {
   try {
-    const { title, description, featuredImage, gallery, category, brand, autoCompanies } = req.body;
-    const product = new Product({ title, description, featuredImage: featuredImage || '', gallery: gallery || [], category, brand, autoCompanies });
+    const { title, description, featuredImage, gallery, category, brand, autoCompanies, featured } = req.body;
+    const product = new Product({ title, description, featuredImage: featuredImage || '', gallery: gallery || [], category, brand, autoCompanies, featured: featured || false });
     await product.save();
     res.status(201).json(product);
   } catch (err) {
@@ -16,8 +16,8 @@ exports.addProduct = async (req, res) => {
 // Edit an existing product
 exports.editProduct = async (req, res) => {
   try {
-    const { title, description, featuredImage, gallery, category, brand, autoCompanies } = req.body;
-    const updateData = { title, description, featuredImage: featuredImage || '', gallery: gallery || [], category, brand, autoCompanies };
+    const { title, description, featuredImage, gallery, category, brand, autoCompanies, featured } = req.body;
+    const updateData = { title, description, featuredImage: featuredImage || '', gallery: gallery || [], category, brand, autoCompanies, featured: featured || false };
     const product = await Product.findByIdAndUpdate(req.params.id, updateData, { new: true });
     if (!product) return res.status(404).json({ error: 'Product not found' });
     res.json(product);
