@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { productApi, blogApi, serviceApi, quoteApi, Product, Blog, Service, Quote } from '../../services/api';
+import { productApi, blogApi, serviceApi, queryApi, Product, Blog, Service, Query } from '../../services/api';
 import PageMeta from "../../components/common/PageMeta";
 
 export default function Ecommerce() {
   const [products, setProducts] = useState<Product[]>([]);
   const [blogs, setBlogs] = useState<Blog[]>([]);
   const [services, setServices] = useState<Service[]>([]);
-  const [quotes, setQuotes] = useState<Quote[]>([]);
+  const [querys, setQuerys] = useState<Query[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -15,12 +15,12 @@ export default function Ecommerce() {
       productApi.getAll(),
       blogApi.getAll(),
       serviceApi.getAll(),
-      quoteApi.getAll()
-    ]).then(([prodRes, blogRes, servRes, quotesRes]) => {
+      queryApi.getAll()
+    ]).then(([prodRes, blogRes, servRes, querysRes]) => {
       setProducts(Array.isArray(prodRes.data) ? prodRes.data : []);
       setBlogs(Array.isArray(blogRes.data) ? blogRes.data : []);
       setServices(Array.isArray(servRes.data) ? servRes.data : []);
-      setQuotes(Array.isArray(quotesRes.data) ? quotesRes.data : []);
+      setQuerys(Array.isArray(querysRes.data) ? querysRes.data : []);
     }).finally(() => setLoading(false));
   }, []);
 
@@ -48,7 +48,7 @@ export default function Ecommerce() {
           <span className="mt-2 text-lg font-semibold">Services</span>
         </div>
         <div className="bg-white dark:bg-gray-900 shadow rounded-xl p-6 flex flex-col items-center">
-          <span className="text-4xl font-bold text-orange-600">{quotes.filter(q => q.status === 'pending').length}</span>
+          <span className="text-4xl font-bold text-orange-600">{querys.filter(q => q.status === 'pending').length}</span>
           <span className="mt-2 text-lg font-semibold">Pending Messages</span>
         </div>
       </div>
@@ -130,7 +130,7 @@ export default function Ecommerce() {
                   </tr>
                 </thead>
                 <tbody>
-                  {quotes.slice(0, 3).map((q) => (
+                  {querys.slice(0, 3).map((q) => (
                     <tr key={q._id} className="border-t">
                       <td className="px-4 py-2 border font-medium">{q.name}</td>
                       <td className="px-4 py-2 border">{q.phone}</td>
@@ -140,7 +140,7 @@ export default function Ecommerce() {
                       <td className="px-4 py-2 border text-xs text-gray-500">{new Date(q.createdAt).toLocaleString()}</td>
                     </tr>
                   ))}
-                  {quotes.length === 0 && (
+                  {querys.length === 0 && (
                     <tr><td colSpan={4} className="text-gray-500 text-center py-4">No messages found.</td></tr>
                   )}
                 </tbody>

@@ -65,8 +65,8 @@ const BlogForm: React.FC<BlogFormProps> = ({ mode }) => {
     // Replace code
     text = text.replace(/`(.+?)`/g, '<code>$1</code>');
 
-    // Replace blockquotes
-    text = text.replace(/^> (.+)$/gm, '<blockquote>$1</blockquote>');
+    // Replace blockquerys
+    text = text.replace(/^> (.+)$/gm, '<blockquery>$1</blockquery>');
 
     // Replace horizontal lines
     text = text.replace(/^---$/gm, '<hr>');
@@ -199,8 +199,8 @@ const BlogForm: React.FC<BlogFormProps> = ({ mode }) => {
       case 'code':
         insertion = '`' + (start === end ? 'code' : selectedText) + '`';
         break;
-      case 'quote':
-        insertion = '> ' + (start === end ? 'Quote' : selectedText);
+      case 'query':
+        insertion = '> ' + (start === end ? 'Query' : selectedText);
         break;
       case 'hr':
         insertion = '---';
@@ -393,9 +393,9 @@ const BlogForm: React.FC<BlogFormProps> = ({ mode }) => {
               </button>
               <button
                 type="button"
-                onClick={() => insertFormatting('quote')}
+                onClick={() => insertFormatting('query')}
                 className="px-3 py-1 text-sm bg-gray-100 hover:bg-gray-200 rounded-md dark:bg-gray-700 dark:hover:bg-gray-600"
-                title="Quote"
+                title="Query"
               >
                 "
               </button>

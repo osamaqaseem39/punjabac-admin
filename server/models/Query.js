@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const quoteSchema = new mongoose.Schema({
+const querySchema = new mongoose.Schema({
   name: { type: String, required: true },
   email: { type: String, required: true },
   phone: { type: String, required: true },
@@ -11,5 +11,5 @@ const quoteSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now }
 });
 
-const Quote = mongoose.model('Quote', quoteSchema);
-module.exports = Quote; 
+const Query = mongoose.model('Query', querySchema);
+module.exports = Query; 

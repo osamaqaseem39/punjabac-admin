@@ -1,45 +1,45 @@
-const Quote = require('../models/Quote');
+const Query = require('../models/Query');
 
-// Create a new quote
-exports.createQuote = async (req, res) => {
+// Create a new query
+exports.createQuery = async (req, res) => {
   try {
     const { name, email, phone, details, image } = req.body;
     if (!name || !email || !phone || !details) {
       return res.status(400).json({ error: 'All fields except image are required.' });
     }
-    const quote = new Quote({ name, email, phone, details, image });
-    await quote.save();
-    res.status(201).json({ success: true, quote });
+    const query = new Query({ name, email, phone, details, image });
+    await query.save();
+    res.status(201).json({ success: true, query });
   } catch (err) {
-    console.error('Create quote error:', err);
-    res.status(500).json({ error: 'Failed to create quote.' });
+    console.error('Create query error:', err);
+    res.status(500).json({ error: 'Failed to create query.' });
   }
 };
 
-// Get all quotes
-exports.getQuotes = async (req, res) => {
+// Get all querys
+exports.getQueries = async (req, res) => {
   try {
-    const quotes = await Quote.find().sort({ createdAt: -1 });
-    res.json(quotes);
+    const querys = await Query.find().sort({ createdAt: -1 });
+    res.json(querys);
   } catch (err) {
-    console.error('Get quotes error:', err);
-    res.status(500).json({ error: 'Failed to fetch quotes.' });
+    console.error('Get querys error:', err);
+    res.status(500).json({ error: 'Failed to fetch querys.' });
   }
 };
 
-// Update quote status
-exports.updateQuoteStatus = async (req, res) => {
+// Update query status
+exports.updateQueryStatus = async (req, res) => {
   try {
     const { id } = req.params;
     const { status } = req.body;
     if (!['pending', 'in_progress', 'completed', 'rejected'].includes(status)) {
       return res.status(400).json({ error: 'Invalid status value.' });
     }
-    const quote = await Quote.findByIdAndUpdate(id, { status }, { new: true });
-    if (!quote) return res.status(404).json({ error: 'Quote not found.' });
-    res.json({ success: true, quote });
+    const query = await Query.findByIdAndUpdate(id, { status }, { new: true });
+    if (!query) return res.status(404).json({ error: 'Query not found.' });
+    res.json({ success: true, query });
   } catch (err) {
-    console.error('Update quote status error:', err);
-    res.status(500).json({ error: 'Failed to update quote status.' });
+    console.error('Update query status error:', err);
+    res.status(500).json({ error: 'Failed to update query status.' });
   }
 }; 

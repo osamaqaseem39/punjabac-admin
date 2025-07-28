@@ -231,7 +231,7 @@ export const serviceApi = {
   delete: (id: string) => axios.delete(`${BASE_URL}/services/${id}`),
 }; 
 
-export interface Quote {
+export interface Query {
   _id: string;
   name: string;
   email: string;
@@ -243,7 +243,7 @@ export interface Quote {
   createdAt: string;
 }
 
-export interface CreateQuoteInput {
+export interface CreateQueryInput {
   name: string;
   email: string;
   phone: string;
@@ -252,7 +252,7 @@ export interface CreateQuoteInput {
   subject: 'feedback' | 'query';
 }
 
-export interface UpdateQuoteInput {
+export interface UpdateQueryInput {
   name?: string;
   email?: string;
   phone?: string;
@@ -262,14 +262,14 @@ export interface UpdateQuoteInput {
   status?: string;
 }
 
-export const quoteApi = {
-  getAll: () => axios.get<Quote[]>(`${BASE_URL}/quotes`),
-  getById: (id: string) => axios.get<Quote>(`${BASE_URL}/quotes/${id}`),
+export const queryApi = {
+  getAll: () => axios.get<Query[]>(`${BASE_URL}/querys`),
+  getById: (id: string) => axios.get<Query>(`${BASE_URL}/querys/${id}`),
   update: (id: string, data: { status: string }) =>
-    axios.put<Quote>(`${BASE_URL}/quotes/${id}`, data, {
+    axios.put<Query>(`${BASE_URL}/querys/${id}`, data, {
       headers: { 'Content-Type': 'application/json' }
     }),
-  delete: (id: string) => axios.delete(`${BASE_URL}/quotes/${id}`),
+  delete: (id: string) => axios.delete(`${BASE_URL}/querys/${id}`),
 };
 
 export interface Category {

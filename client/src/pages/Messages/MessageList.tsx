@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { quoteApi, Quote } from '../../services/api';
+import { queryApi, Query } from '../../services/api';
 import PageMeta from "../../components/common/PageMeta";
 
 const statusOptions = [
@@ -10,7 +10,7 @@ const statusOptions = [
 ];
 
 const MessageList: React.FC = () => {
-  const [messages, setMessages] = useState<Quote[]>([]);
+  const [messages, setMessages] = useState<Query[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [updatingId, setUpdatingId] = useState<string | null>(null);
@@ -22,7 +22,7 @@ const MessageList: React.FC = () => {
   const fetchMessages = async () => {
     setLoading(true);
     try {
-      const res = await quoteApi.getAll();
+      const res = await queryApi.getAll();
       setMessages(res.data);
     } catch (err) {
       setError('Failed to load messages.');
@@ -34,7 +34,7 @@ const MessageList: React.FC = () => {
   const handleStatusChange = async (id: string, status: string) => {
     setUpdatingId(id);
     try {
-      await quoteApi.update(id, { status });
+      await queryApi.update(id, { status });
       setMessages((prev) => prev.map(q => q._id === id ? { ...q, status } : q));
     } catch (err) {
       alert('Failed to update status.');
