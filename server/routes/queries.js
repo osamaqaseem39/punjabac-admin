@@ -11,4 +11,9 @@ router.get('/', getQueries);
 // PATCH /api/queries/:id - update query status
 router.patch('/:id', updateQueryStatus);
 
+// Test endpoint
+router.get('/test', (req, res) => {
+  res.json({ message: 'Queries API is working', timestamp: new Date().toISOString() });
+});
+
 module.exports = router; 
