@@ -30,7 +30,7 @@ const allowedOrigins = [
   'https://punjabac-admin-4nq8.vercel.app',
   'https://punjabac.osamaqaseem.online',
   'https://punjabac-admin.osamaqaseem.online',
-  'https://punjabac-website.osamaqaseem.online',
+  'https://punjabac-website.vercel.app',
   'https://www.punjabac.com',
   'https://punjabac.com',
   // Allow all subpages for these domains
