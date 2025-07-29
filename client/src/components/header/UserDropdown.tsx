@@ -1,10 +1,48 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { DropdownItem } from "../ui/dropdown/DropdownItem";
 import { Dropdown } from "../ui/dropdown/Dropdown";
 import { Link } from "react-router";
+import { authApi, CurrentUserResponse } from "../../services/api";
+import { useDispatch } from "react-redux";
+import { logout } from "../../redux/features/authSlice";
+
+interface User {
+  id: string;
+  username: string;
+  email: string;
+  role: string;
+  createdAt: string;
+  updatedAt: string;
+}
 
 export default function UserDropdown() {
   const [isOpen, setIsOpen] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const response = await authApi.getCurrentUser();
+        setUser(response.data.user);
+      } catch (err: any) {
+        console.error('Error fetching user:', err);
+        setError(err.response?.data?.message || 'Failed to load user data');
+        // If unauthorized, redirect to login
+        if (err.response?.status === 401) {
+          dispatch(logout());
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUser();
+  }, [dispatch]);
 
   function toggleDropdown() {
     setIsOpen(!isOpen);
@@ -13,6 +51,49 @@ export default function UserDropdown() {
   function closeDropdown() {
     setIsOpen(false);
   }
+
+  const handleLogout = () => {
+    dispatch(logout());
+    closeDropdown();
+  };
+
+  if (loading) {
+    return (
+      <div className="flex items-center text-gray-700 dark:text-gray-400">
+        <div className="mr-3 overflow-hidden rounded-full h-11 w-11 bg-gray-200 animate-pulse"></div>
+        <div className="mr-1">
+          <div className="h-4 bg-gray-200 rounded animate-pulse w-20"></div>
+        </div>
+        <div className="w-4 h-4 bg-gray-200 rounded animate-pulse"></div>
+      </div>
+    );
+  }
+
+  if (error || !user) {
+    return (
+      <div className="flex items-center text-gray-700 dark:text-gray-400">
+        <div className="mr-3 overflow-hidden rounded-full h-11 w-11 bg-gray-200"></div>
+        <span className="mr-1 font-medium text-theme-sm text-gray-500">User</span>
+        <svg
+          className="stroke-gray-500 dark:stroke-gray-400"
+          width="18"
+          height="20"
+          viewBox="0 0 18 20"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M4.3125 8.65625L9 13.3437L13.6875 8.65625"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      </div>
+    );
+  }
+
   return (
     <div className="relative">
       <button
@@ -23,7 +104,7 @@ export default function UserDropdown() {
           <img src="/images/user/owner.jpg" alt="User" />
         </span>
 
-        <span className="block mr-1 font-medium text-theme-sm">Musharof</span>
+        <span className="block mr-1 font-medium text-theme-sm">{user.username}</span>
 
         <svg
           className={`stroke-gray-500 dark:stroke-gray-400 transition-transform duration-200 ${
@@ -52,10 +133,13 @@ export default function UserDropdown() {
       >
         <div>
           <span className="block font-medium text-gray-700 text-theme-sm dark:text-gray-400">
-            Musharof Chowdhury
+            {user.username}
           </span>
           <span className="mt-0.5 block text-theme-xs text-gray-500 dark:text-gray-400">
-            randomuser@pimjo.com
+            {user.email}
+          </span>
+          <span className="mt-0.5 block text-theme-xs text-gray-400 dark:text-gray-500">
+            Role: {user.role.charAt(0).toUpperCase() + user.role.slice(1)}
           </span>
         </div>
 
@@ -136,8 +220,8 @@ export default function UserDropdown() {
             </DropdownItem>
           </li>
         </ul>
-        <Link
-          to="/signin"
+        <button
+          onClick={handleLogout}
           className="flex items-center gap-3 px-3 py-2 mt-3 font-medium text-gray-700 rounded-lg group text-theme-sm hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
         >
           <svg
@@ -156,7 +240,7 @@ export default function UserDropdown() {
             />
           </svg>
           Sign out
-        </Link>
+        </button>
       </Dropdown>
     </div>
   );

@@ -77,6 +77,18 @@ export interface AuthResponse {
     id: string;
     username: string;
     email: string;
+    role: string;
+  };
+}
+
+export interface CurrentUserResponse {
+  user: {
+    id: string;
+    username: string;
+    email: string;
+    role: string;
+    createdAt: string;
+    updatedAt: string;
   };
 }
 
@@ -90,6 +102,13 @@ export const authApi = {
   
   register: (data: RegisterInput) => 
     axios.post<AuthResponse>(`${BASE_URL}/auth/register`, data, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }),
+
+  getCurrentUser: () => 
+    axios.get<CurrentUserResponse>(`${BASE_URL}/auth/me`, {
       headers: {
         'Content-Type': 'application/json'
       }

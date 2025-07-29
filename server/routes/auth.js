@@ -1,9 +1,11 @@
 const express = require('express');
-const router = express.Router();
-const jwt = require('jsonwebtoken');
 const { body, validationResult } = require('express-validator');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const User = require('../models/User');
-const { registerUser } = require('../controllers/authController');
+const auth = require('../middleware/auth');
+
+const router = express.Router();
 
 /**
  * @swagger
@@ -16,33 +18,21 @@ const { registerUser } = require('../controllers/authController');
  *         - email
  *         - password
  *       properties:
- *         _id:
- *           type: string
- *           description: The auto-generated ID of the user
  *         username:
  *           type: string
- *           description: The username
+ *           description: User's username
  *         email:
  *           type: string
  *           format: email
- *           description: The user's email
+ *           description: User's email
  *         password:
  *           type: string
  *           format: password
- *           description: User's password (stored as a hash)
+ *           description: User's password
  *         role:
  *           type: string
  *           enum: [user, admin]
- *           description: User role
- *         createdAt:
- *           type: string
- *           format: date-time
- *           description: The date the user was created
- *         updatedAt:
- *           type: string
- *           format: date-time
- *           description: The date the user was last updated
- *   
+ *           description: User's role
  *     AuthResponse:
  *       type: object
  *       properties:
@@ -54,16 +44,12 @@ const { registerUser } = require('../controllers/authController');
  *           properties:
  *             id:
  *               type: string
- *               description: User ID
  *             username:
  *               type: string
- *               description: Username
  *             email:
  *               type: string
- *               description: User email
  *             role:
  *               type: string
- *               description: User role
  */
 
 /**
@@ -77,25 +63,7 @@ const { registerUser } = require('../controllers/authController');
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             required:
- *               - username
- *               - email
- *               - password
- *             properties:
- *               username:
- *                 type: string
- *                 minLength: 3
- *                 description: User's username
- *               email:
- *                 type: string
- *                 format: email
- *                 description: User's email
- *               password:
- *                 type: string
- *                 format: password
- *                 minLength: 6
- *                 description: User's password
+ *             $ref: '#/components/schemas/User'
  *     responses:
  *       201:
  *         description: User registered successfully
@@ -104,26 +72,66 @@ const { registerUser } = require('../controllers/authController');
  *             schema:
  *               $ref: '#/components/schemas/AuthResponse'
  *       400:
- *         description: Invalid input or user already exists
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                 errors:
- *                   type: array
- *                   items:
- *                     type: object
+ *         description: Validation error
  *       500:
  *         description: Server error
  */
+const registerUser = async (req, res) => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    const { username, email, password } = req.body;
+
+    // Check if user already exists
+    let user = await User.findOne({ $or: [{ email }, { username }] });
+    if (user) {
+      return res.status(400).json({ 
+        message: 'User already exists with this email or username' 
+      });
+    }
+
+    // Create new user
+    user = new User({
+      username,
+      email,
+      password
+    });
+
+    await user.save();
+
+    // Create JWT token
+    const token = jwt.sign(
+      { userId: user._id },
+      process.env.JWT_SECRET || 'your-secret-key',
+      { expiresIn: '24h' }
+    );
+
+    res.status(201).json({
+      token,
+      user: {
+        id: user._id,
+        username: user.username,
+        email: user.email,
+        role: user.role
+      }
+    });
+  } catch (error) {
+    console.error('Registration error:', error);
+    res.status(500).json({ 
+      message: 'Server error during registration',
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
+  }
+};
+
 router.post('/register',
   [
-    body('username').trim().isLength({ min: 3 }),
-    body('email').isEmail().normalizeEmail(),
-    body('password').isLength({ min: 6 })
+    body('username').isLength({ min: 3 }).withMessage('Username must be at least 3 characters'),
+    body('email').isEmail().normalizeEmail().withMessage('Must be a valid email'),
+    body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters')
   ],
   registerUser
 );
@@ -165,9 +173,9 @@ router.post('/register',
  *           application/json:
  *             schema:
  *               type: object
- *               properties:
- *                 message:
- *                   type: string
+ *             properties:
+ *               message:
+ *                 type: string
  *       500:
  *         description: Server error
  */
@@ -223,5 +231,69 @@ router.post('/login',
     }
   }
 );
+
+/**
+ * @swagger
+ * /api/auth/me:
+ *   get:
+ *     summary: Get current user profile
+ *     tags: [Authentication]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Current user profile
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 user:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: string
+ *                     username:
+ *                       type: string
+ *                     email:
+ *                       type: string
+ *                     role:
+ *                       type: string
+ *                     createdAt:
+ *                       type: string
+ *                       format: date-time
+ *                     updatedAt:
+ *                       type: string
+ *                       format: date-time
+ *       401:
+ *         description: Not authenticated
+ *       500:
+ *         description: Server error
+ */
+router.get('/me', auth, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.userId).select('-password');
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    
+    res.json({
+      user: {
+        id: user._id,
+        username: user.username,
+        email: user.email,
+        role: user.role,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt
+      }
+    });
+  } catch (error) {
+    console.error('Get current user error:', error);
+    res.status(500).json({ 
+      message: 'Server error while fetching user profile',
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
+  }
+});
 
 module.exports = router; 
