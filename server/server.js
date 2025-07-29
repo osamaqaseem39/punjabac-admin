@@ -26,7 +26,7 @@ const app = express();
 const allowedOrigins = [
   'http://localhost:3001',
   'http://localhost:3000',
-  'https://punjabac-admim.vercel.app',
+  'https://punjabac-admin.vercel.app',
   'https://punjabac-admin-4nq8.vercel.app',
   'https://punjabac.osamaqaseem.online',
   'https://punjabac-admin.osamaqaseem.online',
