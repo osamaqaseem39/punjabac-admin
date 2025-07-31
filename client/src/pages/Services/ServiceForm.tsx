@@ -41,7 +41,7 @@ const ServiceForm: React.FC = () => {
   const [allBenefits, setAllBenefits] = useState<Benefit[]>([]);
 
   useEffect(() => {
-    benefitApi.getAll().then(res => setAllBenefits(res.data)).catch(() => setAllBenefits([]));
+    benefitApi.getAll({ type: 'service' }).then(res => setAllBenefits(res.data)).catch(() => setAllBenefits([]));
     if (isEdit && id) {
       setLoading(true);
       serviceApi.getById(id)

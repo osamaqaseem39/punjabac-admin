@@ -14,7 +14,25 @@ exports.createBenefit = async (req, res) => {
 // Get all benefits
 exports.getBenefits = async (req, res) => {
   try {
-    const benefits = await Benefit.find();
+    const { type } = req.query;
+    const filter = {};
+    
+    if (type) {
+      filter.type = type;
+    }
+    
+    const benefits = await Benefit.find(filter);
+    res.json(benefits);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+// Get benefits by type
+exports.getBenefitsByType = async (req, res) => {
+  try {
+    const { type } = req.params;
+    const benefits = await Benefit.find({ type });
     res.json(benefits);
   } catch (err) {
     res.status(500).json({ error: err.message });

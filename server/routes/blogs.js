@@ -367,14 +367,6 @@ router.put('/:id',
         });
       }
 
-      // Check if user is the author
-      if (blog.author.toString() !== req.user.userId) {
-        return res.status(401).json({
-          message: 'Not authorized to edit this blog',
-          code: 'UNAUTHORIZED_EDIT'
-        });
-      }
-
       const { title, content, tags, status, featuredImage } = req.body;
 
       // Only update fields that are provided
@@ -466,11 +458,6 @@ router.delete('/:id',
       
       if (!blog) {
         return res.status(404).json({ message: 'Blog not found' });
-      }
-
-      // Check if user is the author
-      if (blog.author.toString() !== req.user.userId) {
-        return res.status(401).json({ message: 'Not authorized' });
       }
 
       await Blog.deleteOne({ _id: req.params.id });

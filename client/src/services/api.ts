@@ -149,6 +149,7 @@ export interface Product {
   brand?: string;
   featured?: boolean;
   autoCompanies?: string[];
+  benefits?: string[];
 }
 
 export interface CreateProductInput {
@@ -160,6 +161,7 @@ export interface CreateProductInput {
   brand?: string;
   featured?: boolean;
   autoCompanies?: string[];
+  benefits?: string[];
 }
 
 export interface UpdateProductInput {
@@ -171,6 +173,7 @@ export interface UpdateProductInput {
   brand?: string;
   featured?: boolean;
   autoCompanies?: string[];
+  benefits?: string[];
 }
 
 export const productApi = {
@@ -191,20 +194,26 @@ export interface Benefit {
   _id: string;
   name: string;
   description?: string;
+  type: 'product' | 'service';
 }
 
 export interface CreateBenefitInput {
   name: string;
   description?: string;
+  type: 'product' | 'service';
 }
 
 export interface UpdateBenefitInput {
   name?: string;
   description?: string;
+  type?: 'product' | 'service';
 }
 
 export const benefitApi = {
-  getAll: () => axios.get<Benefit[]>(`${BASE_URL}/benefits`),
+  getAll: (params?: { type?: string }) => {
+    const queryParams = params ? `?${new URLSearchParams(params).toString()}` : '';
+    return axios.get<Benefit[]>(`${BASE_URL}/benefits${queryParams}`);
+  },
   getById: (id: string) => axios.get<Benefit>(`${BASE_URL}/benefits/${id}`),
   create: (data: CreateBenefitInput) => axios.post<Benefit>(`${BASE_URL}/benefits`, data, { headers: { 'Content-Type': 'application/json' } }),
   update: (id: string, data: UpdateBenefitInput) => axios.put<Benefit>(`${BASE_URL}/benefits/${id}`, data, { headers: { 'Content-Type': 'application/json' } }),
@@ -282,13 +291,13 @@ export interface UpdateQueryInput {
 }
 
 export const queryApi = {
-  getAll: () => axios.get<Query[]>(`${BASE_URL}/querys`),
-  getById: (id: string) => axios.get<Query>(`${BASE_URL}/querys/${id}`),
-  update: (id: string, data: { status: string }) =>
-    axios.put<Query>(`${BASE_URL}/querys/${id}`, data, {
+  getAll: () => axios.get<Query[]>(`${BASE_URL}/queries`),
+  getById: (id: string) => axios.get<Query>(`${BASE_URL}/queries/${id}`),
+  update: (id: string, data: Partial<Query>) =>
+    axios.put<Query>(`${BASE_URL}/queries/${id}`, data, {
       headers: { 'Content-Type': 'application/json' }
     }),
-  delete: (id: string) => axios.delete(`${BASE_URL}/querys/${id}`),
+  delete: (id: string) => axios.delete(`${BASE_URL}/queries/${id}`),
 };
 
 export interface Category {

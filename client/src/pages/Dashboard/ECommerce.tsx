@@ -149,8 +149,8 @@ export default function Ecommerce() {
                       className="h-32 w-full object-cover rounded-lg mb-3" 
                     />
                   )}
-                  <h3 className="font-semibold text-gray-900 dark:text-white mb-2 line-clamp-1">{product.title}</h3>
-                  <p className="text-gray-600 dark:text-gray-400 text-sm line-clamp-2 mb-3">{product.description}</p>
+                  <h3 className="font-semibold text-gray-900 dark:text-white mb-2 line-clamp-1">{String(product.title || '')}</h3>
+                  <p className="text-gray-600 dark:text-gray-400 text-sm line-clamp-2 mb-3">{String(product.description || '')}</p>
                   <Link 
                     to={`/products/${product._id}`} 
                     className="inline-flex items-center text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 text-sm font-medium"
@@ -184,9 +184,9 @@ export default function Ecommerce() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {recentBlogs.map(blog => (
                 <div key={blog._id} className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 border border-gray-200 dark:border-gray-600">
-                  <h3 className="font-semibold text-gray-900 dark:text-white mb-2 line-clamp-1">{blog.title}</h3>
+                  <h3 className="font-semibold text-gray-900 dark:text-white mb-2 line-clamp-1">{String(blog.title || '')}</h3>
                   <p className="text-gray-600 dark:text-gray-400 text-sm line-clamp-3 mb-3">
-                    {blog.content.replace(/<[^>]+>/g, '').substring(0, 120)}...
+                    {String(blog.content || '').replace(/<[^>]+>/g, '').substring(0, 120)}...
                   </p>
                   <div className="flex items-center justify-between">
                     <span className="text-xs text-gray-500 dark:text-gray-400">
@@ -233,8 +233,8 @@ export default function Ecommerce() {
                       className="h-32 w-full object-cover rounded-lg mb-3" 
                     />
                   )}
-                  <h3 className="font-semibold text-gray-900 dark:text-white mb-2 line-clamp-1">{service.title}</h3>
-                  <p className="text-gray-600 dark:text-gray-400 text-sm line-clamp-2 mb-3">{service.description}</p>
+                  <h3 className="font-semibold text-gray-900 dark:text-white mb-2 line-clamp-1">{String(service.title || '')}</h3>
+                  <p className="text-gray-600 dark:text-gray-400 text-sm line-clamp-2 mb-3">{String(service.description || '')}</p>
                   <Link 
                     to={`/services/${service._id}`} 
                     className="inline-flex items-center text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 text-sm font-medium"
@@ -279,9 +279,9 @@ export default function Ecommerce() {
                 <tbody>
                   {recentQueries.map((query) => (
                     <tr key={query._id} className="border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700">
-                      <td className="py-3 px-4 font-medium text-gray-900 dark:text-white">{query.name}</td>
-                      <td className="py-3 px-4 text-gray-600 dark:text-gray-400">{query.email}</td>
-                      <td className="py-3 px-4 text-gray-600 dark:text-gray-400">{query.phone}</td>
+                      <td className="py-3 px-4 font-medium text-gray-900 dark:text-white">{String(query.name || '')}</td>
+                      <td className="py-3 px-4 text-gray-600 dark:text-gray-400">{String(query.email || '')}</td>
+                      <td className="py-3 px-4 text-gray-600 dark:text-gray-400">{String(query.phone || '')}</td>
                       <td className="py-3 px-4">
                         <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
                           query.status === 'pending' 

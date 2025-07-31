@@ -39,7 +39,7 @@ exports.getAllServices = async (req, res) => {
 // Get a single service
 exports.getService = async (req, res) => {
   try {
-    const service = await Service.findById(req.params.id);
+    const service = await Service.findById(req.params.id).populate('benefits');
     if (!service) return res.status(404).json({ error: 'Service not found' });
     res.json(service);
   } catch (err) {

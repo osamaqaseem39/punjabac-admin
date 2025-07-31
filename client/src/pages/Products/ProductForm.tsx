@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import { productApi, Product } from '../../services/api';
-import { autoCompanyApi, AutoCompany, categoryApi, brandApi } from '../../services/api';
+import { autoCompanyApi, AutoCompany, categoryApi, brandApi, benefitApi } from '../../services/api';
 
 // Upload a file to cPanel server and return the public URL
 async function uploadToCpanel(file: File): Promise<string> {
@@ -37,6 +37,8 @@ const ProductForm: React.FC = () => {
   const [selectedBrand, setSelectedBrand] = useState<string>('');
   const [autoCompanies, setAutoCompanies] = useState<AutoCompany[]>([]);
   const [selectedAutoCompanies, setSelectedAutoCompanies] = useState<string[]>([]);
+  const [benefits, setBenefits] = useState<any[]>([]);
+  const [selectedBenefits, setSelectedBenefits] = useState<string[]>([]);
 
   useEffect(() => {
     if (id) {
@@ -47,6 +49,7 @@ const ProductForm: React.FC = () => {
           setPreviewFeatured(res.data.featuredImage ? res.data.featuredImage : null);
           setExistingGallery(res.data.gallery ? res.data.gallery : []);
           setPreviewGallery([]);
+          setSelectedBenefits(res.data.benefits ? res.data.benefits : []);
         })
         .finally(() => setLoading(false));
     } else {
@@ -56,12 +59,15 @@ const ProductForm: React.FC = () => {
       setPreviewFeatured(null);
       setPreviewGallery([]);
       setExistingGallery([]);
+      setSelectedBenefits([]);
     }
     // Fetch categories and brands using API methods
     categoryApi.getAll().then(res => setCategories(res.data));
     brandApi.getAll().then(res => setBrands(res.data));
     // Fetch auto companies
     autoCompanyApi.getAll().then(res => setAutoCompanies(res.data));
+    // Fetch product benefits only
+    benefitApi.getAll({ type: 'product' }).then(res => setBenefits(res.data));
   }, [id]);
 
   useEffect(() => {
@@ -113,6 +119,20 @@ const ProductForm: React.FC = () => {
     }));
   };
 
+  const handleBenefitCheckbox = (benefitId: string) => {
+    setSelectedBenefits((prev) =>
+      prev.includes(benefitId)
+        ? prev.filter((id) => id !== benefitId)
+        : [...prev, benefitId]
+    );
+    setProduct((prev) => ({
+      ...prev,
+      benefits: prev.benefits && prev.benefits.includes(benefitId)
+        ? prev.benefits.filter((id: string) => id !== benefitId)
+        : [...(prev.benefits || []), benefitId],
+    }));
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -136,6 +156,7 @@ const ProductForm: React.FC = () => {
         featuredImage: featuredImageUrl || '',
         gallery: galleryUrls.length > 0 ? galleryUrls : [],
         autoCompanies: selectedAutoCompanies,
+        benefits: selectedBenefits,
       };
       // Debug log
       console.log('Submitting product:', payload);
@@ -149,6 +170,7 @@ const ProductForm: React.FC = () => {
         setPreviewFeatured(null);
         setPreviewGallery([]);
         setExistingGallery([]);
+        setSelectedBenefits([]);
       }
       navigate('/products');
     } catch (err) {
@@ -267,6 +289,23 @@ const ProductForm: React.FC = () => {
           {product.brand && brands.find(brand => brand._id === product.brand) && brands.find(brand => brand._id === product.brand).image && (
             <img src={brands.find(brand => brand._id === product.brand).image} alt="Brand" className="h-12 mt-2" />
           )}
+        </div>
+        <div>
+          <label className="block font-semibold mb-1">Benefits</label>
+          <div className="flex flex-wrap gap-4">
+            {benefits.map(benefit => (
+              <label key={benefit._id} className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  value={benefit._id}
+                  checked={selectedBenefits.includes(benefit._id)}
+                  onChange={() => handleBenefitCheckbox(benefit._id)}
+                  className="form-checkbox h-5 w-5 text-indigo-600"
+                />
+                {benefit.name}
+              </label>
+            ))}
+          </div>
         </div>
         <div>
           <label className="block font-semibold mb-1">Auto Companies</label>

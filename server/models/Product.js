@@ -27,6 +27,10 @@ const productSchema = new mongoose.Schema({
     ref: 'Brand',
     required: false
   },
+  benefits: {
+    type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Benefit' }],
+    default: []
+  },
   featured: {
     type: Boolean,
     default: false

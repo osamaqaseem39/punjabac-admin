@@ -22,6 +22,19 @@ const BenefitList: React.FC = () => {
     }
   };
 
+  const getTypeBadge = (type: string) => {
+    const isProduct = type === 'product';
+    return (
+      <span className={`px-2 py-1 text-xs rounded-full ${
+        isProduct 
+          ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200' 
+          : 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
+      }`}>
+        {isProduct ? 'Product' : 'Service'}
+      </span>
+    );
+  };
+
   return (
     <div className="p-4">
       <div className="flex justify-between items-center mb-4">
@@ -35,7 +48,10 @@ const BenefitList: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {benefits.map(benefit => (
               <div key={benefit._id} className="bg-white dark:bg-gray-900 shadow-lg rounded-2xl p-4 flex flex-col hover:shadow-2xl transition-shadow">
-                <h2 className="text-xl font-semibold mb-1 text-gray-800 dark:text-gray-200">{benefit.name}</h2>
+                <div className="flex justify-between items-start mb-2">
+                  <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200">{benefit.name}</h2>
+                  {getTypeBadge(benefit.type)}
+                </div>
                 <p className="text-sm text-gray-600 dark:text-gray-400 mb-2 line-clamp-2">{benefit.description}</p>
                 <div className="mt-auto flex gap-2">
                   <Link to={`/benefits/${benefit._id}`} className="px-3 py-1 bg-indigo-100 text-indigo-700 rounded hover:bg-indigo-200 transition">View</Link>

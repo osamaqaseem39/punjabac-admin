@@ -9,6 +9,12 @@ const benefitSchema = new mongoose.Schema({
   description: {
     type: String,
     default: ''
+  },
+  type: {
+    type: String,
+    enum: ['product', 'service'],
+    required: true,
+    default: 'service'
   }
 }, {
   timestamps: true

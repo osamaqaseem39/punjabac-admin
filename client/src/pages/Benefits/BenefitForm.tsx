@@ -10,7 +10,7 @@ const BenefitForm: React.FC<BenefitFormProps> = ({ mode }) => {
   const params = useParams();
   const id = params.id;
   const navigate = useNavigate();
-  const [benefit, setBenefit] = useState<any>({ name: '', description: '' });
+  const [benefit, setBenefit] = useState<any>({ name: '', description: '', type: 'service' });
   const [loading, setLoading] = useState(false);
 
   const isEdit = mode === 'edit' || (!!id && mode !== 'add');
@@ -24,11 +24,11 @@ const BenefitForm: React.FC<BenefitFormProps> = ({ mode }) => {
         })
         .finally(() => setLoading(false));
     } else {
-      setBenefit({ name: '', description: '' });
+      setBenefit({ name: '', description: '', type: 'service' });
     }
   }, [id, isEdit]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setBenefit({ ...benefit, [e.target.name]: e.target.value });
   };
 
@@ -40,7 +40,7 @@ const BenefitForm: React.FC<BenefitFormProps> = ({ mode }) => {
         await benefitApi.update(id, benefit);
       } else {
         await benefitApi.create(benefit);
-        setBenefit({ name: '', description: '' });
+        setBenefit({ name: '', description: '', type: 'service' });
       }
       navigate('/benefits');
     } catch (err) {
@@ -62,6 +62,13 @@ const BenefitForm: React.FC<BenefitFormProps> = ({ mode }) => {
         <div>
           <label className="block font-semibold mb-1">Description</label>
           <textarea name="description" value={benefit.description} onChange={handleChange} className="w-full border px-3 py-2 rounded" required />
+        </div>
+        <div>
+          <label className="block font-semibold mb-1">Type</label>
+          <select name="type" value={benefit.type} onChange={handleChange} className="w-full border px-3 py-2 rounded" required>
+            <option value="service">Service</option>
+            <option value="product">Product</option>
+          </select>
         </div>
         <button type="submit" className="bg-indigo-600 text-white px-4 py-2 rounded" disabled={loading}>{loading ? (isEdit ? 'Saving...' : 'Saving...') : (isEdit ? 'Save Changes' : 'Save Benefit')}</button>
       </form>

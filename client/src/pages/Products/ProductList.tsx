@@ -99,6 +99,18 @@ const ProductList: React.FC = () => {
                     {brand && brand.image && <img src={brand.image} alt={brand.name} className="h-6 w-6 rounded-full" />}
                     {brand && <span className="text-xs text-gray-500">{brand?.name}</span>}
                   </div>
+                  {product.benefits && product.benefits.length > 0 && (
+                    <div className="mb-2">
+                      <span className="text-xs text-gray-500">Benefits:</span>
+                      <div className="flex flex-wrap gap-1 mt-1">
+                        {product.benefits.map((benefit: any, index: number) => (
+                          <span key={index} className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">
+                            {typeof benefit === 'string' ? benefit : benefit.name}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                   <div className="mt-auto flex gap-2">
                     <Link to={`/products/${product._id}`} className="px-3 py-1 bg-indigo-100 text-indigo-700 rounded hover:bg-indigo-200 transition">View</Link>
                     <Link to={`/products/${product._id}/edit`} className="px-3 py-1 bg-yellow-100 text-yellow-700 rounded hover:bg-yellow-200 transition">Edit</Link>
