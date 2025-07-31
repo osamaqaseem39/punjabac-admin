@@ -22,11 +22,11 @@ const productSchema = new mongoose.Schema({
     ref: 'Category',
     required: false
   },
-  brand: {
+  compatibleBrands: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Brand',
     required: false
-  },
+  }],
   benefits: {
     type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Benefit' }],
     default: []

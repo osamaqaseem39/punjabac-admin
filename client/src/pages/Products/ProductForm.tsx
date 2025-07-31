@@ -39,6 +39,7 @@ const ProductForm: React.FC = () => {
   const [selectedAutoCompanies, setSelectedAutoCompanies] = useState<string[]>([]);
   const [benefits, setBenefits] = useState<any[]>([]);
   const [selectedBenefits, setSelectedBenefits] = useState<string[]>([]);
+  const [selectedCompatibleBrands, setSelectedCompatibleBrands] = useState<string[]>([]);
 
   useEffect(() => {
     if (id) {
@@ -50,6 +51,7 @@ const ProductForm: React.FC = () => {
           setExistingGallery(res.data.gallery ? res.data.gallery : []);
           setPreviewGallery([]);
           setSelectedBenefits(res.data.benefits ? res.data.benefits : []);
+          setSelectedCompatibleBrands(res.data.compatibleBrands ? res.data.compatibleBrands.map((b: any) => typeof b === 'string' ? b : b._id) : []);
         })
         .finally(() => setLoading(false));
     } else {
@@ -60,6 +62,7 @@ const ProductForm: React.FC = () => {
       setPreviewGallery([]);
       setExistingGallery([]);
       setSelectedBenefits([]);
+      setSelectedCompatibleBrands([]);
     }
     // Fetch categories and brands using API methods
     categoryApi.getAll().then(res => setCategories(res.data));
@@ -133,6 +136,14 @@ const ProductForm: React.FC = () => {
     }));
   };
 
+  const handleCompatibleBrandCheckbox = (brandId: string) => {
+    setSelectedCompatibleBrands((prev) =>
+      prev.includes(brandId)
+        ? prev.filter((id) => id !== brandId)
+        : [...prev, brandId]
+    );
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -157,6 +168,7 @@ const ProductForm: React.FC = () => {
         gallery: galleryUrls.length > 0 ? galleryUrls : [],
         autoCompanies: selectedAutoCompanies,
         benefits: selectedBenefits,
+        compatibleBrands: selectedCompatibleBrands,
       };
       // Debug log
       console.log('Submitting product:', payload);
@@ -171,6 +183,7 @@ const ProductForm: React.FC = () => {
         setPreviewGallery([]);
         setExistingGallery([]);
         setSelectedBenefits([]);
+        setSelectedCompatibleBrands([]);
       }
       navigate('/products');
     } catch (err) {
@@ -279,16 +292,21 @@ const ProductForm: React.FC = () => {
           )}
         </div>
         <div>
-          <label className="block font-semibold mb-1">Brand</label>
-          <select name="brand" value={product.brand || ''} onChange={handleBrandChange} className="w-full border px-3 py-2 rounded">
-            <option value="">Select Brand</option>
+          <label className="block font-semibold mb-1">Compatible Brands</label>
+          <div className="flex flex-wrap gap-4">
             {brands.map(brand => (
-              <option key={brand._id} value={brand._id}>{brand.name}</option>
+              <label key={brand._id} className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  value={brand._id}
+                  checked={selectedCompatibleBrands.includes(brand._id)}
+                  onChange={() => handleCompatibleBrandCheckbox(brand._id)}
+                />
+                {brand.name}
+                {brand.image && <img src={brand.image} alt={brand.name} className="h-8 ml-2" />}
+              </label>
             ))}
-          </select>
-          {product.brand && brands.find(brand => brand._id === product.brand) && brands.find(brand => brand._id === product.brand).image && (
-            <img src={brands.find(brand => brand._id === product.brand).image} alt="Brand" className="h-12 mt-2" />
-          )}
+          </div>
         </div>
         <div>
           <label className="block font-semibold mb-1">Benefits</label>

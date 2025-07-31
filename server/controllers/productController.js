@@ -3,14 +3,14 @@ const Product = require('../models/Product');
 // Add a new product
 exports.addProduct = async (req, res) => {
   try {
-    const { title, description, featuredImage, gallery, category, brand, autoCompanies, featured, benefits } = req.body;
+    const { title, description, featuredImage, gallery, category, compatibleBrands, autoCompanies, featured, benefits } = req.body;
     const product = new Product({ 
       title, 
       description, 
       featuredImage: featuredImage || '', 
       gallery: gallery || [], 
       category, 
-      brand, 
+      compatibleBrands: compatibleBrands || [],
       autoCompanies, 
       featured: featured || false,
       benefits: benefits || []
@@ -26,14 +26,14 @@ exports.addProduct = async (req, res) => {
 // Edit an existing product
 exports.editProduct = async (req, res) => {
   try {
-    const { title, description, featuredImage, gallery, category, brand, autoCompanies, featured, benefits } = req.body;
+    const { title, description, featuredImage, gallery, category, compatibleBrands, autoCompanies, featured, benefits } = req.body;
     const updateData = { 
       title, 
       description, 
       featuredImage: featuredImage || '', 
       gallery: gallery || [], 
       category, 
-      brand, 
+      compatibleBrands: compatibleBrands || [],
       autoCompanies, 
       featured: featured || false,
       benefits: benefits || []
@@ -51,8 +51,8 @@ exports.getAllProducts = async (req, res) => {
   try {
     const filter = {};
     if (req.query.category) filter.category = req.query.category;
-    if (req.query.brand) filter.brand = req.query.brand;
-    const products = await Product.find(filter).sort({ createdAt: -1 }).populate('category').populate('brand').populate('benefits');
+    if (req.query.brand) filter.compatibleBrands = req.query.brand;
+    const products = await Product.find(filter).sort({ createdAt: -1 }).populate('category').populate('compatibleBrands').populate('benefits');
     res.json(products);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -85,7 +85,7 @@ exports.deleteProduct = async (req, res) => {
 exports.getProductsByCategory = async (req, res) => {
   try {
     const { categoryId } = req.params;
-    const products = await Product.find({ category: categoryId }).populate('category').populate('brand').populate('benefits');
+    const products = await Product.find({ category: categoryId }).populate('category').populate('compatibleBrands').populate('benefits');
     res.json(products);
   } catch (err) {
     res.status(500).json({ error: err.message });

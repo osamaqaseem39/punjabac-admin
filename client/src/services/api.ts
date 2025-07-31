@@ -150,6 +150,7 @@ export interface Product {
   featured?: boolean;
   autoCompanies?: string[];
   benefits?: string[];
+  compatibleBrands?: (string | Brand)[];
 }
 
 export interface CreateProductInput {
